@@ -40,16 +40,14 @@ class HomeFragment : Fragment() {
 
         viewLifecycleOwner.lifecycleScope.launchWhenStarted {
             viewModel.retrievalState.collect {
-                when (it) {
-                    is HomeworkViewModel.HomeworkRetrievalState.Success -> {
-                        binding.fragmentHomeProgressBar.isVisible = false
+                if (it is HomeworkViewModel.HomeworkRetrievalState.Success) {
+                    binding.fragmentHomeProgressBar.isVisible = false
 
-                        if (it.homeworkExist) {
-                            adapter.submitList(it.homeworkList)
-                        } else {
-                            binding.fragmentHomeRecyclerView.isVisible = false
-                            binding.fragmentHomeNoItemsMessage.isVisible = true
-                        }
+                    if (it.homeworkExist) {
+                        adapter.submitList(it.homeworkList)
+                    } else {
+                        binding.fragmentHomeRecyclerView.isVisible = false
+                        binding.fragmentHomeNoItemsMessage.isVisible = true
                     }
                 }
             }
