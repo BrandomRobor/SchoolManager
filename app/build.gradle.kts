@@ -4,6 +4,7 @@ plugins {
     id("com.android.application")
     id("kotlin-android")
     id("kotlin-kapt")
+    id("dagger.hilt.android.plugin")
 }
 
 android {
@@ -63,4 +64,8 @@ dependencies {
     implementation("androidx.room:room-runtime:2.2.6")
     implementation("androidx.room:room-ktx:2.2.6")
     kapt("androidx.room:room-compiler:2.2.6")
+
+    // Dagger Hilt (dependency injection helper)
+    implementation("com.google.dagger:hilt-android:2.33-beta")
+    kapt("com.google.dagger:hilt-compiler:2.33-beta")
 }

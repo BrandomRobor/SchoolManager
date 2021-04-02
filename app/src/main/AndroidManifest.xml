@@ -4,6 +4,7 @@
     package="me.brandom.schoolmanager">
 
     <application
+        android:name=".SchoolManagerApplication"
         android:allowBackup="false"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
