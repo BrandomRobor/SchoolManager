@@ -42,6 +42,8 @@ class HomeFragment : Fragment() {
             viewModel.retrievalState.collect {
                 when (it) {
                     is HomeworkViewModel.HomeworkRetrievalState.Success -> {
+                        binding.fragmentHomeProgressBar.isVisible = false
+
                         if (it.homeworkExist) {
                             adapter.submitList(it.homeworkList)
                         } else {
