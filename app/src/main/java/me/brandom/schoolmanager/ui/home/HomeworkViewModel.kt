@@ -23,7 +23,12 @@ class HomeworkViewModel @Inject constructor(private val homeworkDao: HomeworkDao
         viewModelScope.launch {
             try {
                 homeworkDao.getAllSubjectsWithHomework().collect {
-                    _retrievalState.value = HomeworkRetrievalState.Success(it)
+                    var counter = 0
+                    it.forEach { subject ->
+                        counter += subject.homework.size
+                    }
+
+                    _retrievalState.value = HomeworkRetrievalState.Success(it, counter > 0)
                 }
             } catch (e: Exception) {
                 _retrievalState.value = HomeworkRetrievalState.Error
@@ -34,6 +39,10 @@ class HomeworkViewModel @Inject constructor(private val homeworkDao: HomeworkDao
     sealed class HomeworkRetrievalState {
         object Loading : HomeworkRetrievalState()
         object Error : HomeworkRetrievalState()
-        data class Success(val homeworkList: List<SubjectWithHomeworks>) : HomeworkRetrievalState()
+        data class Success(
+            val homeworkList: List<SubjectWithHomeworks>,
+            val homeworkExist: Boolean
+        ) :
+            HomeworkRetrievalState()
     }
 }
