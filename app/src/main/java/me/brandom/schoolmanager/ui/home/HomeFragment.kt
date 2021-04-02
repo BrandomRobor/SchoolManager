@@ -8,6 +8,7 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.collect
@@ -36,20 +37,25 @@ class HomeFragment : Fragment() {
         binding.apply {
             fragmentHomeRecyclerView.setHasFixedSize(true)
             fragmentHomeRecyclerView.adapter = adapter
-        }
 
-        viewLifecycleOwner.lifecycleScope.launchWhenStarted {
-            viewModel.retrievalState.collect {
-                if (it is HomeworkViewModel.HomeworkRetrievalState.Success) {
-                    binding.fragmentHomeProgressBar.isVisible = false
+            viewLifecycleOwner.lifecycleScope.launchWhenStarted {
+                viewModel.retrievalState.collect {
+                    if (it is HomeworkViewModel.HomeworkRetrievalState.Success) {
+                        fragmentHomeProgressBar.isVisible = false
 
-                    if (it.homeworkExist) {
-                        adapter.submitList(it.homeworkList)
-                    } else {
-                        binding.fragmentHomeRecyclerView.isVisible = false
-                        binding.fragmentHomeNoItemsMessage.isVisible = true
+                        if (it.homeworkExist) {
+                            adapter.submitList(it.homeworkList)
+                        } else {
+                            fragmentHomeRecyclerView.isVisible = false
+                            fragmentHomeNoItemsMessage.isVisible = true
+                        }
                     }
                 }
+            }
+
+            fragmentHomeAddFab.setOnClickListener {
+                val action = HomeFragmentDirections.actionHomeFragmentToAddHomeworkFragment()
+                findNavController().navigate(action)
             }
         }
     }
