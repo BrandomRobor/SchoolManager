@@ -2,4 +2,6 @@
     <string name="app_name">School Manager</string>
 
     <string name="fragment_home_no_items">No homework added yet.</string>
+
+    <string name="fragment_add_homework_label">Add homework</string>
 </resources>
