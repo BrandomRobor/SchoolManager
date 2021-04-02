@@ -5,6 +5,7 @@ plugins {
     id("kotlin-android")
     id("kotlin-kapt")
     id("dagger.hilt.android.plugin")
+    id("androidx.navigation.safeargs.kotlin")
 }
 
 android {
@@ -68,4 +69,15 @@ dependencies {
     // Dagger Hilt (dependency injection helper)
     implementation("com.google.dagger:hilt-android:2.33-beta")
     kapt("com.google.dagger:hilt-compiler:2.33-beta")
+
+    // Coroutines library
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.4.1")
+
+    // Lifecycle KTX extensions
+    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.3.1")
+    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.3.1")
+
+    // Navigation component
+    implementation("androidx.navigation:navigation-fragment-ktx:2.3.4")
+    implementation("androidx.navigation:navigation-ui-ktx:2.3.4")
 }
