@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
@@ -40,7 +41,14 @@ class HomeFragment : Fragment() {
         viewLifecycleOwner.lifecycleScope.launchWhenStarted {
             viewModel.retrievalState.collect {
                 when (it) {
-                    is HomeworkViewModel.HomeworkRetrievalState.Success -> adapter.submitList(it.homeworkList)
+                    is HomeworkViewModel.HomeworkRetrievalState.Success -> {
+                        if (it.homeworkExist) {
+                            adapter.submitList(it.homeworkList)
+                        } else {
+                            binding.fragmentHomeRecyclerView.isVisible = false
+                            binding.fragmentHomeNoItemsMessage.isVisible = true
+                        }
+                    }
                 }
             }
         }
