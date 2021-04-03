@@ -44,6 +44,8 @@ class HomeFragment : Fragment() {
                         fragmentHomeProgressBar.isVisible = false
 
                         if (it.homeworkExist) {
+                            fragmentHomeNoItemsMessage.isVisible = false
+                            fragmentHomeRecyclerView.isVisible = true
                             adapter.submitList(it.homeworkList)
                         } else {
                             fragmentHomeRecyclerView.isVisible = false
