@@ -11,4 +11,5 @@
     <string name="fragment_add_homework_deadline_time">Time</string>
     <string name="fragment_add_homework_subject">Subject</string>
     <string name="fragment_add_homework_done">Done</string>
+    <string name="fragment_add_homework_required">This field is required</string>
 </resources>
