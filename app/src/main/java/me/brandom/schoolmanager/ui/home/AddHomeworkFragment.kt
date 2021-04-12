@@ -1,6 +1,7 @@
 package me.brandom.schoolmanager.ui.home
 
 import android.app.DatePickerDialog
+import android.app.TimePickerDialog
 import android.os.Bundle
 import android.text.format.DateFormat
 import android.view.LayoutInflater
@@ -46,6 +47,25 @@ class AddHomeworkFragment : Fragment() {
                         today.get(GregorianCalendar.YEAR),
                         today.get(GregorianCalendar.MONTH),
                         today.get(GregorianCalendar.DAY_OF_MONTH)
+                    ).show()
+                }
+            }
+
+            fragmentAddHomeworkTimeInput.editText?.let {
+                it.setOnClickListener { _ ->
+                    TimePickerDialog(
+                        requireContext(),
+                        { _, hourOfDay, minute ->
+                            deadlineDateTime.set(GregorianCalendar.HOUR_OF_DAY, hourOfDay)
+                            deadlineDateTime.set(GregorianCalendar.MINUTE, minute)
+                            it.setText(
+                                DateFormat.getTimeFormat(requireContext())
+                                    .format(deadlineDateTime.time)
+                            )
+                        },
+                        today.get(GregorianCalendar.HOUR_OF_DAY),
+                        today.get(GregorianCalendar.MINUTE),
+                        DateFormat.is24HourFormat(requireContext())
                     ).show()
                 }
             }
