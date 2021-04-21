@@ -7,6 +7,7 @@ import android.text.format.DateFormat
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import me.brandom.schoolmanager.R
@@ -33,12 +34,17 @@ class AddHomeworkFragment : Fragment() {
         val deadlineDateTime = GregorianCalendar()
 
         binding.apply {
+            fragmentAddHomeworkNameInput.editText!!.addTextChangedListener {
+                fragmentAddHomeworkNameInput.error = null
+            }
+
             fragmentAddHomeworkDateInput.editText?.let {
                 it.setOnClickListener { _ ->
                     DatePickerDialog(
                         requireContext(),
                         { _, year, month, dayOfMonth ->
                             deadlineDateTime.set(year, month, dayOfMonth)
+                            fragmentAddHomeworkDateInput.error = null
                             it.setText(
                                 DateFormat.getDateFormat(requireContext())
                                     .format(deadlineDateTime.time)
@@ -58,6 +64,7 @@ class AddHomeworkFragment : Fragment() {
                         { _, hourOfDay, minute ->
                             deadlineDateTime.set(GregorianCalendar.HOUR_OF_DAY, hourOfDay)
                             deadlineDateTime.set(GregorianCalendar.MINUTE, minute)
+                            fragmentAddHomeworkTimeInput.error = null
                             it.setText(
                                 DateFormat.getTimeFormat(requireContext())
                                     .format(deadlineDateTime.time)
