@@ -19,4 +19,9 @@
         android:name="me.brandom.schoolmanager.ui.home.AddHomeworkFragment"
         android:label="@string/fragment_add_homework_label"
         tools:layout="@layout/fragment_add_homework" />
+    <fragment
+        android:id="@+id/subjectFragment"
+        android:name="me.brandom.schoolmanager.ui.subject.SubjectFragment"
+        android:label="@string/fragment_subject_label"
+        tools:layout="@layout/fragment_subject" />
 </navigation>
