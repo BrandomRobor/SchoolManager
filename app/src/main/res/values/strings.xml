@@ -1,10 +1,10 @@
 <resources>
     <string name="app_name">School Manager</string>
 
+    <string name="fragment_home_label">Home</string>
     <string name="fragment_home_no_items">No homework added yet.</string>
 
     <string name="fragment_add_homework_label">Add homework</string>
-
     <string name="fragment_add_homework_name">Name</string>
     <string name="fragment_add_homework_description">Description</string>
     <string name="fragment_add_homework_deadline_date">Date</string>
@@ -12,4 +12,6 @@
     <string name="fragment_add_homework_subject">Subject</string>
     <string name="fragment_add_homework_done">Done</string>
     <string name="fragment_add_homework_required">This field is required</string>
+
+    <string name="fragment_subject_label">Subjects</string>
 </resources>
