@@ -22,22 +22,14 @@ class HomeworkViewModel @Inject constructor(private val homeworkDao: HomeworkDao
     init {
         viewModelScope.launch {
             homeworkDao.getAllSubjectsWithHomework().collect {
-                var counter = 0
-                it.forEach { subject ->
-                    counter += subject.homework.size
-                }
-
-                _retrievalState.value = HomeworkRetrievalState.Success(it, counter > 0)
+                _retrievalState.value =
+                    HomeworkRetrievalState.Success(it)
             }
         }
     }
 
     sealed class HomeworkRetrievalState {
         object Loading : HomeworkRetrievalState()
-        data class Success(
-            val homeworkList: List<SubjectWithHomeworks>,
-            val homeworkExist: Boolean
-        ) :
-            HomeworkRetrievalState()
+        data class Success(val homeworkList: List<SubjectWithHomeworks>) : HomeworkRetrievalState()
     }
 }
