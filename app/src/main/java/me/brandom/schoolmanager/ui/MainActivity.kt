@@ -9,6 +9,7 @@ import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import dagger.hilt.android.AndroidEntryPoint
+import me.brandom.schoolmanager.R
 import me.brandom.schoolmanager.databinding.ActivityMainBinding
 
 @AndroidEntryPoint
@@ -26,7 +27,10 @@ class MainActivity : AppCompatActivity() {
 
             val navController =
                 (supportFragmentManager.findFragmentById(activityFragmentView.id) as NavHostFragment).navController
-            appBarConfiguration = AppBarConfiguration(navController.graph, activityDrawerLayout)
+            appBarConfiguration = AppBarConfiguration(
+                setOf(R.id.homeFragment, R.id.subjectFragment),
+                activityDrawerLayout
+            )
             acitvityNavView.setupWithNavController(navController)
             setupActionBarWithNavController(navController, appBarConfiguration)
         }
