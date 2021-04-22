@@ -9,12 +9,16 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import me.brandom.schoolmanager.database.daos.HomeworkDao
+import me.brandom.schoolmanager.database.daos.SubjectDao
 import me.brandom.schoolmanager.database.entities.SubjectWithHomeworks
 import javax.inject.Inject
 
 @HiltViewModel
 @ExperimentalCoroutinesApi
-class HomeworkViewModel @Inject constructor(private val homeworkDao: HomeworkDao) : ViewModel() {
+class HomeworkViewModel @Inject constructor(
+    private val homeworkDao: HomeworkDao,
+    private val subjectDao: SubjectDao
+) : ViewModel() {
     private val _retrievalState =
         MutableStateFlow<HomeworkRetrievalState>(HomeworkRetrievalState.Loading)
     val retrievalState: StateFlow<HomeworkRetrievalState> = _retrievalState
@@ -27,6 +31,9 @@ class HomeworkViewModel @Inject constructor(private val homeworkDao: HomeworkDao
             }
         }
     }
+
+    fun getSpinnerSubjectList() =
+        subjectDao.getAllSubjects()
 
     sealed class HomeworkRetrievalState {
         object Loading : HomeworkRetrievalState()

@@ -10,4 +10,6 @@ data class Subject(
     val teacherName: String? = null,
     @PrimaryKey(autoGenerate = true)
     val id: Int = 0
-)
+) {
+    override fun toString(): String = name
+}
