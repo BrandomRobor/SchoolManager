@@ -10,6 +10,7 @@ import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import me.brandom.schoolmanager.database.daos.HomeworkDao
 import me.brandom.schoolmanager.database.daos.SubjectDao
+import me.brandom.schoolmanager.database.entities.Homework
 import me.brandom.schoolmanager.database.entities.SubjectWithHomeworks
 import javax.inject.Inject
 
@@ -37,6 +38,12 @@ class HomeworkViewModel @Inject constructor(
 
     fun getSubjectCount() =
         subjectDao.getSubjectCount()
+
+    fun onAddHomeworkSubmit(homework: Homework) {
+        viewModelScope.launch {
+            homeworkDao.insertHomework(homework)
+        }
+    }
 
     sealed class HomeworkRetrievalState {
         object Loading : HomeworkRetrievalState()

@@ -7,7 +7,9 @@ import android.text.format.DateFormat
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.AdapterView
 import android.widget.ArrayAdapter
+import android.widget.Toast
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -18,6 +20,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.collect
 import me.brandom.schoolmanager.R
+import me.brandom.schoolmanager.database.entities.Homework
 import me.brandom.schoolmanager.databinding.FragmentAddHomeworkBinding
 import me.brandom.schoolmanager.ui.MainActivity
 import java.util.GregorianCalendar
@@ -43,6 +46,7 @@ class AddHomeworkFragment : Fragment() {
 
         val today = GregorianCalendar()
         val deadlineDateTime = GregorianCalendar()
+        var selectedSubject: Int? = null
 
         binding.apply {
             fragmentAddHomeworkNameInput.editText!!.addTextChangedListener {
@@ -91,17 +95,20 @@ class AddHomeworkFragment : Fragment() {
             viewLifecycleOwner.lifecycleScope.launchWhenStarted {
                 viewModel.getSpinnerSubjectList().collect {
                     (fragmentAddHomeworkSubjectInput.editText as MaterialAutoCompleteTextView).apply {
-                        setAdapter(
-                            ArrayAdapter(
-                                requireContext(),
-                                R.layout.support_simple_spinner_dropdown_item,
-                                it
-                            )
+                        val adapter = ArrayAdapter(
+                            requireContext(),
+                            R.layout.support_simple_spinner_dropdown_item,
+                            it
                         )
+                        setAdapter(adapter)
                         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.JELLY_BEAN_MR1) {
                             setText(it[0].toString(), false)
                         } else {
                             setText(it[0].toString())
+                        }
+                        selectedSubject = adapter.getItem(0)?.id
+                        onItemClickListener = AdapterView.OnItemClickListener { _, _, position, _ ->
+                            selectedSubject = adapter.getItem(position)?.id
                         }
                     }
                 }
@@ -109,6 +116,19 @@ class AddHomeworkFragment : Fragment() {
 
             fragmentAddHomeworkDoneFab.setOnClickListener {
                 if (checkRequiredFields()) {
+                    viewModel.onAddHomeworkSubmit(
+                        Homework(
+                            fragmentAddHomeworkNameInput.editText!!.text.toString(),
+                            deadlineDateTime.timeInMillis,
+                            selectedSubject!!,
+                            if (fragmentAddHomeworkDescriptionInput.editText!!.text.isBlank()) null else fragmentAddHomeworkDescriptionInput.editText!!.text.toString()
+                        )
+                    )
+                    Toast.makeText(
+                        requireContext(),
+                        "Homework added successfully",
+                        Toast.LENGTH_SHORT
+                    ).show()
                     findNavController().navigateUp()
                 }
             }
