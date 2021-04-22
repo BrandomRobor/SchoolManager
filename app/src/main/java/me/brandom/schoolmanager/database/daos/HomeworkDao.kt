@@ -27,4 +27,7 @@ interface HomeworkDao {
 
     @Query("SELECT * FROM homework WHERE id = :id")
     fun getHomeworkById(id: Int): Flow<Homework>
+
+    @Query("SELECT COUNT(name) FROM homework")
+    suspend fun getHomeworkCount(): Int
 }
