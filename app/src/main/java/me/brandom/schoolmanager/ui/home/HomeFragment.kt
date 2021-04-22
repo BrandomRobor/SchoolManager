@@ -43,13 +43,13 @@ class HomeFragment : Fragment() {
                     if (it is HomeworkViewModel.HomeworkRetrievalState.Success) {
                         fragmentHomeProgressBar.isVisible = false
 
-                        if (it.homeworkList.isEmpty()) {
-                            fragmentHomeRecyclerView.isVisible = false
-                            fragmentHomeNoItemsMessage.isVisible = true
-                        } else {
+                        if (it.homeworkExist) {
                             fragmentHomeNoItemsMessage.isVisible = false
                             fragmentHomeRecyclerView.isVisible = true
                             adapter.submitList(it.homeworkList)
+                        } else {
+                            fragmentHomeRecyclerView.isVisible = false
+                            fragmentHomeNoItemsMessage.isVisible = true
                         }
                     }
                 }
