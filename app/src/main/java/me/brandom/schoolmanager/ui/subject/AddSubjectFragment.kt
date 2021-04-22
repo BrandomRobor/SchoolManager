@@ -13,6 +13,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import me.brandom.schoolmanager.R
 import me.brandom.schoolmanager.database.entities.Subject
 import me.brandom.schoolmanager.databinding.FragmentAddSubjectBinding
+import me.brandom.schoolmanager.ui.MainActivity
 
 @AndroidEntryPoint
 class AddSubjectFragment : Fragment() {
@@ -55,6 +56,7 @@ class AddSubjectFragment : Fragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
+        (requireActivity() as MainActivity).closeKeyboard()
         _binding = null
     }
 

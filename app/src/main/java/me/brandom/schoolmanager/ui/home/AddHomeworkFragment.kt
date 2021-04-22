@@ -12,6 +12,7 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import me.brandom.schoolmanager.R
 import me.brandom.schoolmanager.databinding.FragmentAddHomeworkBinding
+import me.brandom.schoolmanager.ui.MainActivity
 import java.util.GregorianCalendar
 
 class AddHomeworkFragment : Fragment() {
@@ -87,6 +88,7 @@ class AddHomeworkFragment : Fragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
+        (requireActivity() as MainActivity).closeKeyboard()
         _binding = null
     }
 
