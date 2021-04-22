@@ -24,4 +24,7 @@ interface SubjectDao {
 
     @Query("SELECT * FROM subject WHERE id = :id")
     fun getSubjectById(id: Int): Flow<Subject>
+
+    @Query("SELECT COUNT(name) FROM subject")
+    fun getSubjectCount(): Flow<Int>
 }

@@ -35,6 +35,9 @@ class HomeworkViewModel @Inject constructor(
     fun getSpinnerSubjectList() =
         subjectDao.getAllSubjects()
 
+    fun getSubjectCount() =
+        subjectDao.getSubjectCount()
+
     sealed class HomeworkRetrievalState {
         object Loading : HomeworkRetrievalState()
         data class Success(
