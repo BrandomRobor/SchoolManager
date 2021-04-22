@@ -14,4 +14,9 @@
     <string name="fragment_add_homework_required">This field is required</string>
 
     <string name="fragment_subject_label">Subjects</string>
+
+    <string name="fragment_add_subject_label">Add subject</string>
+    <string name="fragment_add_subject_name">Name</string>
+    <string name="fragment_add_subject_location">Location</string>
+    <string name="fragment_add_subject_teacher">Teacher</string>
 </resources>

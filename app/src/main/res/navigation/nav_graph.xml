@@ -23,5 +23,14 @@
         android:id="@+id/subjectFragment"
         android:name="me.brandom.schoolmanager.ui.subject.SubjectFragment"
         android:label="@string/fragment_subject_label"
-        tools:layout="@layout/fragment_subject" />
+        tools:layout="@layout/fragment_subject">
+        <action
+            android:id="@+id/action_subjectFragment_to_addSubjectFragment"
+            app:destination="@id/addSubjectFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/addSubjectFragment"
+        android:name="me.brandom.schoolmanager.ui.subject.AddSubjectFragment"
+        android:label="@string/fragment_add_subject_label"
+        tools:layout="@layout/fragment_add_subject" />
 </navigation>
