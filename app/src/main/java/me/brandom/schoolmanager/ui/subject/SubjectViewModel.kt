@@ -25,6 +25,12 @@ class SubjectViewModel @Inject constructor(private val subjectDao: SubjectDao) :
         }
     }
 
+    fun onAddSubjectSubmit(subject: Subject) {
+        viewModelScope.launch {
+            subjectDao.insertSubject(subject)
+        }
+    }
+
     sealed class SubjectRetrievalState {
         object Loading : SubjectRetrievalState()
         data class Success(val subjectList: List<Subject>) : SubjectRetrievalState()
