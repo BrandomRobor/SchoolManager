@@ -1,5 +1,6 @@
 package me.brandom.schoolmanager.database.entities
 
+import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
@@ -14,6 +15,7 @@ import androidx.room.PrimaryKey
 data class Homework(
     val name: String,
     val deadline: Long,
+    @ColumnInfo(index = true)
     val subjectId: Int,
     val description: String? = null,
     @PrimaryKey(autoGenerate = true)
