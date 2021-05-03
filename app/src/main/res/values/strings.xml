@@ -19,4 +19,6 @@
     <string name="fragment_add_subject_name">Name</string>
     <string name="fragment_add_subject_location">Location</string>
     <string name="fragment_add_subject_teacher">Teacher</string>
+
+    <string name="homework_reminders_channel_name">Homework reminders</string>
 </resources>
