@@ -13,11 +13,11 @@ import androidx.room.PrimaryKey
     )]
 )
 data class Homework(
-    val name: String,
+    val hwName: String,
     val deadline: Long,
     @ColumnInfo(index = true)
     val subjectId: Int,
     val description: String? = null,
     @PrimaryKey(autoGenerate = true)
-    val id: Int = 0
+    val hwId: Int = 0
 )

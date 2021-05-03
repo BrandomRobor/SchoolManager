@@ -11,7 +11,7 @@ import kotlinx.coroutines.launch
 import me.brandom.schoolmanager.database.daos.HomeworkDao
 import me.brandom.schoolmanager.database.daos.SubjectDao
 import me.brandom.schoolmanager.database.entities.Homework
-import me.brandom.schoolmanager.database.entities.SubjectWithHomeworks
+import me.brandom.schoolmanager.database.entities.HomeworkWithSubject
 import javax.inject.Inject
 
 @HiltViewModel
@@ -26,7 +26,7 @@ class HomeworkViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
-            homeworkDao.getAllSubjectsWithHomework().collect {
+            homeworkDao.getAllHomeworkWithSubject().collect {
                 _retrievalState.value =
                     HomeworkRetrievalState.Success(it, homeworkDao.getHomeworkCount() > 0)
             }
@@ -48,7 +48,7 @@ class HomeworkViewModel @Inject constructor(
     sealed class HomeworkRetrievalState {
         object Loading : HomeworkRetrievalState()
         data class Success(
-            val homeworkList: List<SubjectWithHomeworks>,
+            val homeworkList: List<HomeworkWithSubject>,
             val homeworkExist: Boolean
         ) :
             HomeworkRetrievalState()

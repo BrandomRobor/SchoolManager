@@ -7,23 +7,23 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import me.brandom.schoolmanager.database.entities.Homework
+import me.brandom.schoolmanager.database.entities.HomeworkWithSubject
 import me.brandom.schoolmanager.database.entities.Subject
-import me.brandom.schoolmanager.database.entities.SubjectWithHomeworks
 import me.brandom.schoolmanager.databinding.ItemHomeworkBinding
 
 class HomeworkListAdapter :
-    ListAdapter<SubjectWithHomeworks, HomeworkListAdapter.HomeworkListViewHolder>(differ) {
+    ListAdapter<HomeworkWithSubject, HomeworkListAdapter.HomeworkListViewHolder>(differ) {
     companion object {
-        val differ = object : DiffUtil.ItemCallback<SubjectWithHomeworks>() {
+        val differ = object : DiffUtil.ItemCallback<HomeworkWithSubject>() {
             override fun areItemsTheSame(
-                oldItem: SubjectWithHomeworks,
-                newItem: SubjectWithHomeworks
+                oldItem: HomeworkWithSubject,
+                newItem: HomeworkWithSubject
             ): Boolean =
-                oldItem == newItem
+                oldItem.homework.hwId == newItem.homework.hwId
 
             override fun areContentsTheSame(
-                oldItem: SubjectWithHomeworks,
-                newItem: SubjectWithHomeworks
+                oldItem: HomeworkWithSubject,
+                newItem: HomeworkWithSubject
             ): Boolean =
                 oldItem.homework == newItem.homework
         }
@@ -33,9 +33,9 @@ class HomeworkListAdapter :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(homework: Homework, subject: Subject) {
             binding.apply {
-                itemHomeworkName.text = homework.name
+                itemHomeworkName.text = homework.hwName
 
-                itemHomeworkDescription.isVisible = homework.description.isNullOrEmpty()
+                itemHomeworkDescription.isVisible = !homework.description.isNullOrEmpty()
                 itemHomeworkDescription.text = homework.description
 
                 itemHomeworkDeadline.text = homework.deadline.toString()
@@ -56,8 +56,6 @@ class HomeworkListAdapter :
 
     override fun onBindViewHolder(holder: HomeworkListViewHolder, position: Int) {
         val currentItem = getItem(position)
-        currentItem.homework.forEach {
-            holder.bind(it, currentItem.subject)
-        }
+        holder.bind(currentItem.homework, currentItem.subject)
     }
 }
