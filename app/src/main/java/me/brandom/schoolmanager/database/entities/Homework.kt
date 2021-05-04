@@ -1,9 +1,11 @@
 package me.brandom.schoolmanager.database.entities
 
+import android.os.Parcelable
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
+import kotlinx.parcelize.Parcelize
 
 @Entity(
     foreignKeys = [ForeignKey(
@@ -12,6 +14,7 @@ import androidx.room.PrimaryKey
         childColumns = ["subjectId"]
     )]
 )
+@Parcelize
 data class Homework(
     val hwName: String,
     val deadline: Long,
@@ -20,4 +23,4 @@ data class Homework(
     val description: String? = null,
     @PrimaryKey(autoGenerate = true)
     val hwId: Int = 0
-)
+) : Parcelable
