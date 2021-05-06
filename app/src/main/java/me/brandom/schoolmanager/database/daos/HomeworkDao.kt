@@ -12,7 +12,7 @@ import me.brandom.schoolmanager.database.entities.HomeworkWithSubject
 @Dao
 interface HomeworkDao {
     @Insert
-    suspend fun insertHomework(homework: Homework)
+    suspend fun insertHomework(homework: Homework): Long
 
     @Update
     suspend fun updateHomework(homework: Homework)

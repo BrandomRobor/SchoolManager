@@ -129,8 +129,12 @@ class AddHomeworkFragment : Fragment() {
                         selectedSubject!!.id,
                         if (fragmentAddHomeworkDescriptionInput.editText!!.text.isBlank()) null else fragmentAddHomeworkDescriptionInput.editText!!.text.toString()
                     )
-                    viewModel.onAddHomeworkSubmit(newHomework)
-                    createBroadcastAlarm(newHomework, selectedSubject!!.name)
+                    viewLifecycleOwner.lifecycleScope.launchWhenStarted {
+                        viewModel.onAddHomeworkSubmit(newHomework)
+                        viewModel.newAddedHomeworkId.collect {
+                            createBroadcastAlarm(it, newHomework.deadline)
+                        }
+                    }
                     Toast.makeText(
                         requireContext(),
                         "Homework added successfully",
@@ -174,19 +178,15 @@ class AddHomeworkFragment : Fragment() {
         }
     }
 
-    private fun createBroadcastAlarm(homework: Homework, subjectName: String) {
+    private fun createBroadcastAlarm(homeworkId: Int, deadline: Long) {
         val intent = Intent(requireContext(), HomeworkBroadcastReceiver::class.java)
-        val bundle = Bundle()
 
-        bundle.putParcelable("homework", homework)
-        bundle.putString("name", subjectName)
-
-        intent.putExtra("bundle", bundle)
+        intent.putExtra("id", homeworkId)
 
         AlarmManagerCompat.setExactAndAllowWhileIdle(
             ContextCompat.getSystemService(requireContext(), AlarmManager::class.java)!!,
             AlarmManager.RTC_WAKEUP,
-            homework.deadline,
+            deadline,
             PendingIntent.getBroadcast(requireContext(), 0, intent, 0)
         )
     }

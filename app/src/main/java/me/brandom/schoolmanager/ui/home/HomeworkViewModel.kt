@@ -1,10 +1,13 @@
 package me.brandom.schoolmanager.ui.home
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
@@ -23,6 +26,8 @@ class HomeworkViewModel @Inject constructor(
     private val _retrievalState =
         MutableStateFlow<HomeworkRetrievalState>(HomeworkRetrievalState.Loading)
     val retrievalState: StateFlow<HomeworkRetrievalState> = _retrievalState
+    private val _newAddedHomeworkId = MutableSharedFlow<Int>()
+    val newAddedHomeworkId: SharedFlow<Int> = _newAddedHomeworkId
 
     init {
         viewModelScope.launch {
@@ -41,7 +46,9 @@ class HomeworkViewModel @Inject constructor(
 
     fun onAddHomeworkSubmit(homework: Homework) {
         viewModelScope.launch {
-            homeworkDao.insertHomework(homework)
+            val newId = homeworkDao.insertHomework(homework).toInt()
+            Log.i("Test", newId.toString())
+            _newAddedHomeworkId.emit(newId)
         }
     }
 
