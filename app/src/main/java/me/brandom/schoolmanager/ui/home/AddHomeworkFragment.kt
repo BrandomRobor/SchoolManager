@@ -1,7 +1,10 @@
 package me.brandom.schoolmanager.ui.home
 
+import android.app.AlarmManager
 import android.app.DatePickerDialog
+import android.app.PendingIntent
 import android.app.TimePickerDialog
+import android.content.Intent
 import android.os.Bundle
 import android.text.format.DateFormat
 import android.view.LayoutInflater
@@ -10,6 +13,8 @@ import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Toast
+import androidx.core.app.AlarmManagerCompat
+import androidx.core.content.ContextCompat
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -21,7 +26,9 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.collect
 import me.brandom.schoolmanager.R
 import me.brandom.schoolmanager.database.entities.Homework
+import me.brandom.schoolmanager.database.entities.Subject
 import me.brandom.schoolmanager.databinding.FragmentAddHomeworkBinding
+import me.brandom.schoolmanager.receiver.HomeworkBroadcastReceiver
 import me.brandom.schoolmanager.ui.MainActivity
 import java.util.GregorianCalendar
 
@@ -46,7 +53,7 @@ class AddHomeworkFragment : Fragment() {
 
         val today = GregorianCalendar()
         val deadlineDateTime = GregorianCalendar()
-        var selectedSubject: Int? = null
+        var selectedSubject: Subject? = null
 
         binding.apply {
             fragmentAddHomeworkNameInput.editText!!.addTextChangedListener {
@@ -106,9 +113,9 @@ class AddHomeworkFragment : Fragment() {
                         } else {
                             setText(it[0].toString())
                         }
-                        selectedSubject = adapter.getItem(0)?.id
+                        selectedSubject = adapter.getItem(0)
                         onItemClickListener = AdapterView.OnItemClickListener { _, _, position, _ ->
-                            selectedSubject = adapter.getItem(position)?.id
+                            selectedSubject = adapter.getItem(position)
                         }
                     }
                 }
@@ -116,14 +123,14 @@ class AddHomeworkFragment : Fragment() {
 
             fragmentAddHomeworkDoneFab.setOnClickListener {
                 if (checkRequiredFields()) {
-                    viewModel.onAddHomeworkSubmit(
-                        Homework(
-                            fragmentAddHomeworkNameInput.editText!!.text.toString(),
-                            deadlineDateTime.timeInMillis,
-                            selectedSubject!!,
-                            if (fragmentAddHomeworkDescriptionInput.editText!!.text.isBlank()) null else fragmentAddHomeworkDescriptionInput.editText!!.text.toString()
-                        )
+                    val newHomework = Homework(
+                        fragmentAddHomeworkNameInput.editText!!.text.toString(),
+                        deadlineDateTime.timeInMillis,
+                        selectedSubject!!.id,
+                        if (fragmentAddHomeworkDescriptionInput.editText!!.text.isBlank()) null else fragmentAddHomeworkDescriptionInput.editText!!.text.toString()
                     )
+                    viewModel.onAddHomeworkSubmit(newHomework)
+                    createBroadcastAlarm(newHomework, selectedSubject!!.name)
                     Toast.makeText(
                         requireContext(),
                         "Homework added successfully",
@@ -165,5 +172,22 @@ class AddHomeworkFragment : Fragment() {
 
             return validInput
         }
+    }
+
+    private fun createBroadcastAlarm(homework: Homework, subjectName: String) {
+        val intent = Intent(requireContext(), HomeworkBroadcastReceiver::class.java)
+        val bundle = Bundle()
+
+        bundle.putParcelable("homework", homework)
+        bundle.putString("name", subjectName)
+
+        intent.putExtra("bundle", bundle)
+
+        AlarmManagerCompat.setExactAndAllowWhileIdle(
+            ContextCompat.getSystemService(requireContext(), AlarmManager::class.java)!!,
+            AlarmManager.RTC_WAKEUP,
+            homework.deadline,
+            PendingIntent.getBroadcast(requireContext(), 0, intent, 0)
+        )
     }
 }
