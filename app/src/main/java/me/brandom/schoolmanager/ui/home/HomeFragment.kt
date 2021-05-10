@@ -13,6 +13,7 @@ import androidx.navigation.fragment.findNavController
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.collect
+import me.brandom.schoolmanager.database.entities.Homework
 import me.brandom.schoolmanager.databinding.FragmentHomeBinding
 
 @AndroidEntryPoint
@@ -33,7 +34,12 @@ class HomeFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val adapter = HomeworkListAdapter()
+        val homeworkManager = object : HomeworkListAdapter.HomeworkManager {
+            override fun deleteHomework(homework: Homework) {
+                viewModel.deleteHomework(homework)
+            }
+        }
+        val adapter = HomeworkListAdapter(homeworkManager)
 
         binding.apply {
             fragmentHomeRecyclerView.setHasFixedSize(true)

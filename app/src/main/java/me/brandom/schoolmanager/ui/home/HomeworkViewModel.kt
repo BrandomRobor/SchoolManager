@@ -52,6 +52,12 @@ class HomeworkViewModel @Inject constructor(
         }
     }
 
+    fun deleteHomework(homework: Homework) {
+        viewModelScope.launch {
+            homeworkDao.deleteHomework(homework)
+        }
+    }
+
     sealed class HomeworkRetrievalState {
         object Loading : HomeworkRetrievalState()
         data class Success(

@@ -3,6 +3,11 @@
 
     <string name="fragment_home_label">Home</string>
     <string name="fragment_home_no_items">No homework added yet.</string>
+    <string name="fragment_home_edit_item">Edit</string>
+    <string name="fragment_home_delete_item">Delete</string>
+    <string name="fragment_home_delete_success">Homework deleted successfully</string>
+    <string name="dialog_delete_message">Are you sure you want to delete this homework?</string>
+    <string name="dialog_cancel_button">Cancel</string>
 
     <string name="fragment_add_homework_label">Add homework</string>
     <string name="fragment_add_homework_name">Name</string>
