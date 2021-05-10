@@ -55,6 +55,9 @@ class AddHomeworkFragment : Fragment() {
         val deadlineDateTime = GregorianCalendar()
         var selectedSubject: Subject? = null
 
+        deadlineDateTime.set(GregorianCalendar.SECOND, 0)
+        deadlineDateTime.set(GregorianCalendar.MILLISECOND, 0)
+
         binding.apply {
             fragmentAddHomeworkNameInput.editText!!.addTextChangedListener {
                 fragmentAddHomeworkNameInput.error = null
