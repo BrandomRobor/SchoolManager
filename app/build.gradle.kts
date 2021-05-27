@@ -1,5 +1,3 @@
-import org.jetbrains.kotlin.gradle.plugin.getKotlinPluginVersion
-
 plugins {
     id("com.android.application")
     id("kotlin-android")
@@ -45,7 +43,6 @@ android {
     }
     kotlinOptions {
         jvmTarget = JavaVersion.VERSION_1_8.toString()
-        useIR = true
     }
     buildFeatures {
         viewBinding = true
@@ -53,9 +50,9 @@ android {
 }
 
 dependencies {
-    implementation("org.jetbrains.kotlin:kotlin-stdlib:${getKotlinPluginVersion()}")
-    implementation("androidx.core:core-ktx:1.3.2")
-    implementation("androidx.appcompat:appcompat:1.2.0")
+    implementation("org.jetbrains.kotlin:kotlin-stdlib:1.5.10")
+    implementation("androidx.core:core-ktx:1.5.0")
+    implementation("androidx.appcompat:appcompat:1.3.0")
     implementation("com.google.android.material:material:1.3.0")
     implementation("androidx.constraintlayout:constraintlayout:2.0.4")
     testImplementation("junit:junit:4.13.2")
@@ -68,11 +65,11 @@ dependencies {
     kapt("androidx.room:room-compiler:2.3.0")
 
     // Dagger Hilt (dependency injection helper)
-    implementation("com.google.dagger:hilt-android:2.35")
-    kapt("com.google.dagger:hilt-compiler:2.35")
+    implementation("com.google.dagger:hilt-android:2.36")
+    kapt("com.google.dagger:hilt-compiler:2.36")
 
     // Coroutines library
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.4.1")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.5.0")
 
     // Lifecycle KTX extensions
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.3.1")
