@@ -19,7 +19,7 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.collect
 import me.brandom.schoolmanager.database.entities.Homework
 import me.brandom.schoolmanager.databinding.FragmentHomeBinding
-import me.brandom.schoolmanager.receiver.HomeworkBroadcastReceiver
+import me.brandom.schoolmanager.internal.receiver.HomeworkBroadcastReceiver
 
 @AndroidEntryPoint
 @ExperimentalCoroutinesApi

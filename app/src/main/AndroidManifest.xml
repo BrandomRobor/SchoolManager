@@ -19,7 +19,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <receiver android:name=".receiver.HomeworkBroadcastReceiver" />
+        <receiver android:name="me.brandom.schoolmanager.internal.receiver.HomeworkBroadcastReceiver" />
     </application>
 
 </manifest>

@@ -1,4 +1,4 @@
-package me.brandom.schoolmanager.receiver
+package me.brandom.schoolmanager.internal.receiver
 
 import android.content.BroadcastReceiver
 import android.content.Context

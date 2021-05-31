@@ -5,7 +5,7 @@ import android.app.NotificationChannel
 import android.app.NotificationManager
 import androidx.core.app.NotificationManagerCompat
 import dagger.hilt.android.HiltAndroidApp
-import me.brandom.schoolmanager.receiver.HomeworkBroadcastReceiver
+import me.brandom.schoolmanager.internal.receiver.HomeworkBroadcastReceiver
 
 @HiltAndroidApp
 class SchoolManagerApplication : Application() {

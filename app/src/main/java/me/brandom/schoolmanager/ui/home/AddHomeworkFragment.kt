@@ -28,7 +28,7 @@ import me.brandom.schoolmanager.R
 import me.brandom.schoolmanager.database.entities.Homework
 import me.brandom.schoolmanager.database.entities.Subject
 import me.brandom.schoolmanager.databinding.FragmentAddHomeworkBinding
-import me.brandom.schoolmanager.receiver.HomeworkBroadcastReceiver
+import me.brandom.schoolmanager.internal.receiver.HomeworkBroadcastReceiver
 import me.brandom.schoolmanager.ui.MainActivity
 import java.util.GregorianCalendar
 
