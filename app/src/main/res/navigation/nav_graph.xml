@@ -16,9 +16,9 @@
     </fragment>
     <fragment
         android:id="@+id/addHomeworkFragment"
-        android:name="me.brandom.schoolmanager.ui.home.AddHomeworkFragment"
+        android:name="me.brandom.schoolmanager.ui.homeworkform.HomeworkFormFragment"
         android:label="@string/fragment_add_homework_label"
-        tools:layout="@layout/fragment_add_homework" />
+        tools:layout="@layout/fragment_homework_form" />
     <fragment
         android:id="@+id/subjectFragment"
         android:name="me.brandom.schoolmanager.ui.subject.SubjectFragment"

@@ -1,5 +1,6 @@
 package me.brandom.schoolmanager.ui
 
+import android.app.Activity
 import android.content.Context
 import android.os.Bundle
 import android.view.inputmethod.InputMethodManager
@@ -15,6 +16,11 @@ import me.brandom.schoolmanager.databinding.ActivityMainBinding
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
+    companion object {
+        const val FORM_CREATE_OK_FLAG = Activity.RESULT_FIRST_USER
+        const val FORM_EDIT_OK_FLAG = Activity.RESULT_FIRST_USER + 1
+    }
+
     private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var binding: ActivityMainBinding
     private var manager: InputMethodManager? = null
