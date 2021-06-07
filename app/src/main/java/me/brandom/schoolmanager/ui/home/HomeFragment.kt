@@ -11,17 +11,23 @@ import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.setFragmentResultListener
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
 import me.brandom.schoolmanager.database.entities.Homework
 import me.brandom.schoolmanager.databinding.FragmentHomeBinding
 import me.brandom.schoolmanager.internal.receiver.HomeworkBroadcastReceiver
+import me.brandom.schoolmanager.ui.MainActivity
 
 @AndroidEntryPoint
+@DelicateCoroutinesApi
 @ExperimentalCoroutinesApi
 class HomeFragment : Fragment() {
     private var _binding: FragmentHomeBinding? = null
@@ -55,7 +61,7 @@ class HomeFragment : Fragment() {
             fragmentHomeRecyclerView.setHasFixedSize(true)
             fragmentHomeRecyclerView.adapter = adapter
 
-            viewLifecycleOwner.lifecycleScope.launchWhenStarted {
+            viewLifecycleOwner.lifecycleScope.launch {
                 viewModel.retrievalState.collect {
                     if (it is HomeworkViewModel.HomeworkRetrievalState.Success) {
                         fragmentHomeProgressBar.isVisible = false
@@ -73,7 +79,7 @@ class HomeFragment : Fragment() {
             }
 
             fragmentHomeAddFab.setOnClickListener {
-                viewLifecycleOwner.lifecycleScope.launchWhenStarted {
+                viewLifecycleOwner.lifecycleScope.launch {
                     viewModel.getSubjectCount().collect {
                         if (it > 0) {
                             val action =
@@ -88,6 +94,17 @@ class HomeFragment : Fragment() {
                         }
                     }
                 }
+            }
+        }
+
+        setFragmentResultListener("formResult") { _, bundle ->
+            when (bundle.getInt("result")) {
+                MainActivity.FORM_CREATE_OK_FLAG ->
+                    Snackbar.make(view, "Homework created successfully", Snackbar.LENGTH_SHORT)
+                        .show()
+                MainActivity.FORM_EDIT_OK_FLAG ->
+                    Snackbar.make(view, "Homework updated successfully", Snackbar.LENGTH_SHORT)
+                        .show()
             }
         }
     }
