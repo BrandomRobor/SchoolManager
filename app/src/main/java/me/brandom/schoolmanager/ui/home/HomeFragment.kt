@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.setFragmentResultListener
@@ -14,7 +13,6 @@ import androidx.navigation.fragment.findNavController
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.launch
 import me.brandom.schoolmanager.database.entities.Homework
 import me.brandom.schoolmanager.databinding.FragmentHomeBinding
 import me.brandom.schoolmanager.ui.MainActivity
@@ -42,38 +40,33 @@ class HomeFragment : Fragment(), HomeworkListAdapter.HomeworkManager {
             fragmentHomeRecyclerView.setHasFixedSize(true)
             fragmentHomeRecyclerView.adapter = adapter
 
-            viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.lifecycleScope.launchWhenStarted {
                 viewModel.retrievalState.collect {
-                    if (it is HomeworkViewModel.HomeworkRetrievalState.Success) {
-                        fragmentHomeProgressBar.isVisible = false
-
-                        if (it.homeworkExist) {
-                            fragmentHomeNoItemsMessage.isVisible = false
-                            fragmentHomeRecyclerView.isVisible = true
-                            adapter.submitList(it.homeworkList)
-                        } else {
-                            fragmentHomeRecyclerView.isVisible = false
-                            fragmentHomeNoItemsMessage.isVisible = true
-                        }
-                    }
+                    fragmentHomeProgressBar.isVisible =
+                        it is HomeworkViewModel.HomeworkRetrievalState.Loading
+                    fragmentHomeRecyclerView.isVisible =
+                        it is HomeworkViewModel.HomeworkRetrievalState.Success && it.homeworkList.isNotEmpty()
+                    fragmentHomeNoItemsMessage.isVisible =
+                        it is HomeworkViewModel.HomeworkRetrievalState.Success && it.homeworkList.isEmpty()
+                    adapter.submitList((it as? HomeworkViewModel.HomeworkRetrievalState.Success)?.homeworkList)
                 }
             }
 
             fragmentHomeAddFab.setOnClickListener {
-                viewLifecycleOwner.lifecycleScope.launch {
-                    viewModel.getSubjectCount().collect {
-                        if (it > 0) {
-                            val action =
-                                HomeFragmentDirections.actionHomeFragmentToAddHomeworkFragment()
-                            findNavController().navigate(action)
-                        } else {
-                            Toast.makeText(
-                                requireContext(),
-                                "Add a subject first",
-                                Toast.LENGTH_SHORT
-                            ).show()
-                        }
+                viewModel.onAddHomeworkClick()
+            }
+        }
+
+        viewLifecycleOwner.lifecycleScope.launchWhenStarted {
+            viewModel.homeworkEvents.collect {
+                when (it) {
+                    is HomeworkViewModel.HomeworkEvents.CanEnterForm -> {
+                        val action =
+                            HomeFragmentDirections.actionHomeFragmentToAddHomeworkFragment()
+                        findNavController().navigate(action)
                     }
+                    is HomeworkViewModel.HomeworkEvents.CannotEnterForm ->
+                        Snackbar.make(view, "Pepega", Snackbar.LENGTH_SHORT).show()
                 }
             }
         }
