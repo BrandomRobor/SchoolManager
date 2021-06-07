@@ -3,10 +3,7 @@ package me.brandom.schoolmanager.ui.home
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
@@ -17,7 +14,6 @@ import me.brandom.schoolmanager.database.entities.HomeworkWithSubject
 import javax.inject.Inject
 
 @HiltViewModel
-@ExperimentalCoroutinesApi
 class HomeworkViewModel @Inject constructor(
     private val homeworkDao: HomeworkDao,
     private val subjectDao: SubjectDao
@@ -25,8 +21,6 @@ class HomeworkViewModel @Inject constructor(
     private val _retrievalState =
         MutableStateFlow<HomeworkRetrievalState>(HomeworkRetrievalState.Loading)
     val retrievalState: StateFlow<HomeworkRetrievalState> = _retrievalState
-    private val _newAddedHomeworkId = MutableSharedFlow<Int>()
-    val newAddedHomeworkId: SharedFlow<Int> = _newAddedHomeworkId
 
     init {
         viewModelScope.launch {
@@ -36,9 +30,6 @@ class HomeworkViewModel @Inject constructor(
             }
         }
     }
-
-    fun getSpinnerSubjectList() =
-        subjectDao.getAllSubjects()
 
     fun getSubjectCount() =
         subjectDao.getSubjectCount()

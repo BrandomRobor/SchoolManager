@@ -20,15 +20,11 @@ object AppModule {
         AppDatabase::class.java,
         "app_db"
     )
-        // This line is added only for testing
-        .fallbackToDestructiveMigration()
         .build()
 
     @Provides
-    @Singleton
     fun providesSubjectDao(database: AppDatabase) = database.subjectDao()
 
     @Provides
-    @Singleton
     fun providesHomeworkDao(database: AppDatabase) = database.homeworkDao()
 }
