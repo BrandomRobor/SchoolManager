@@ -53,7 +53,8 @@ class SubjectFragment : Fragment() {
             }
 
             fragmentSubjectFab.setOnClickListener {
-                val action = SubjectFragmentDirections.actionSubjectFragmentToAddSubjectFragment()
+                val action =
+                    SubjectFragmentDirections.actionSubjectFragmentToSubjectFormFragment("Create subject")
                 findNavController().navigate(action)
             }
 

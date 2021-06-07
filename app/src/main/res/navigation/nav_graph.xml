@@ -11,26 +11,42 @@
         android:label="@string/fragment_home_label"
         tools:layout="@layout/fragment_home">
         <action
-            android:id="@+id/action_homeFragment_to_addHomeworkFragment"
-            app:destination="@id/addHomeworkFragment" />
+            android:id="@+id/action_homeFragment_to_homeworkFormFragment"
+            app:destination="@id/homeworkFormFragment" />
     </fragment>
-    <fragment
-        android:id="@+id/addHomeworkFragment"
-        android:name="me.brandom.schoolmanager.ui.homeworkform.HomeworkFormFragment"
-        android:label="@string/fragment_add_homework_label"
-        tools:layout="@layout/fragment_homework_form" />
     <fragment
         android:id="@+id/subjectFragment"
         android:name="me.brandom.schoolmanager.ui.subject.SubjectFragment"
         android:label="@string/fragment_subject_label"
         tools:layout="@layout/fragment_subject">
         <action
-            android:id="@+id/action_subjectFragment_to_addSubjectFragment"
-            app:destination="@id/addSubjectFragment" />
+            android:id="@+id/action_subjectFragment_to_subjectFormFragment"
+            app:destination="@id/subjectFormFragment" />
     </fragment>
     <fragment
-        android:id="@+id/addSubjectFragment"
+        android:id="@+id/homeworkFormFragment"
+        android:name="me.brandom.schoolmanager.ui.homeworkform.HomeworkFormFragment"
+        android:label="{title}"
+        tools:layout="@layout/fragment_homework_form">
+        <argument
+            android:name="title"
+            app:argType="string" />
+        <argument
+            android:name="homeworkId"
+            android:defaultValue="0"
+            app:argType="integer" />
+    </fragment>
+    <fragment
+        android:id="@+id/subjectFormFragment"
         android:name="me.brandom.schoolmanager.ui.subjectform.SubjectFormFragment"
-        android:label="@string/fragment_add_subject_label"
-        tools:layout="@layout/fragment_subject_form" />
+        android:label="{title}"
+        tools:layout="@layout/fragment_subject_form">
+        <argument
+            android:name="title"
+            app:argType="string" />
+        <argument
+            android:name="subjectId"
+            android:defaultValue="0"
+            app:argType="integer" />
+    </fragment>
 </navigation>

@@ -62,7 +62,7 @@ class HomeFragment : Fragment(), HomeworkListAdapter.HomeworkManager {
                 when (it) {
                     is HomeworkViewModel.HomeworkEvents.CanEnterForm -> {
                         val action =
-                            HomeFragmentDirections.actionHomeFragmentToAddHomeworkFragment()
+                            HomeFragmentDirections.actionHomeFragmentToHomeworkFormFragment("Create homework")
                         findNavController().navigate(action)
                     }
                     is HomeworkViewModel.HomeworkEvents.CannotEnterForm ->
