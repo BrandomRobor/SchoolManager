@@ -30,7 +30,7 @@
     </fragment>
     <fragment
         android:id="@+id/addSubjectFragment"
-        android:name="me.brandom.schoolmanager.ui.subject.AddSubjectFragment"
+        android:name="me.brandom.schoolmanager.ui.subjectform.SubjectFormFragment"
         android:label="@string/fragment_add_subject_label"
-        tools:layout="@layout/fragment_add_subject" />
+        tools:layout="@layout/fragment_subject_form" />
 </navigation>
