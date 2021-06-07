@@ -1,6 +1,5 @@
 package me.brandom.schoolmanager.ui.home
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -44,12 +43,8 @@ class HomeworkViewModel @Inject constructor(
     fun getSubjectCount() =
         subjectDao.getSubjectCount()
 
-    fun onAddHomeworkSubmit(homework: Homework) {
-        viewModelScope.launch {
-            val newId = homeworkDao.insertHomework(homework).toInt()
-            Log.i("Test", newId.toString())
-            _newAddedHomeworkId.emit(newId)
-        }
+    fun onUndoHomeworkClick(homework: Homework) = viewModelScope.launch {
+        homeworkDao.insertHomework(homework)
     }
 
     fun deleteHomework(homework: Homework) {

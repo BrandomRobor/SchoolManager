@@ -109,6 +109,15 @@ class HomeFragment : Fragment() {
         }
     }
 
+    override fun deleteHomework(homework: Homework) {
+        viewModel.deleteHomework(homework)
+        Snackbar.make(requireView(), "Homework deleted successfully", Snackbar.LENGTH_LONG)
+            .setAction("Undo") {
+                viewModel.onUndoHomeworkClick(homework)
+            }
+            .show()
+    }
+
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
