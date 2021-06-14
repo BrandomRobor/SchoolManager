@@ -44,14 +44,13 @@ class SubjectFragment : Fragment() {
 
             retrievalStateJob = viewLifecycleOwner.lifecycleScope.launchWhenStarted {
                 viewModel.retrievalState.collect {
-                    if (it is SubjectViewModel.SubjectRetrievalState.Success) {
-                        if (it.subjectList.isEmpty()) {
-                            fragmentSubjectRecyclerView.isVisible = false
-                        } else {
-                            fragmentSubjectRecyclerView.isVisible = true
-                            adapter.submitList(it.subjectList)
-                        }
-                    }
+                    fragmentSubjectProgressBar.isVisible =
+                        it is SubjectViewModel.SubjectRetrievalState.Loading
+                    fragmentSubjectsNoItemsMessage.isVisible =
+                        it is SubjectViewModel.SubjectRetrievalState.Success && it.subjectList.isEmpty()
+                    fragmentSubjectRecyclerView.isVisible =
+                        it is SubjectViewModel.SubjectRetrievalState.Success && it.subjectList.isNotEmpty()
+                    adapter.submitList((it as? SubjectViewModel.SubjectRetrievalState.Success)?.subjectList)
                 }
             }
 
