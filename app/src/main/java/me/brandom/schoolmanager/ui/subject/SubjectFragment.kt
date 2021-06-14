@@ -14,6 +14,7 @@ import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.collect
+import me.brandom.schoolmanager.R
 import me.brandom.schoolmanager.databinding.FragmentSubjectBinding
 import me.brandom.schoolmanager.ui.MainActivity
 
@@ -56,17 +57,17 @@ class SubjectFragment : Fragment() {
 
             fragmentSubjectFab.setOnClickListener {
                 val action =
-                    SubjectFragmentDirections.actionSubjectFragmentToSubjectFormFragment("Create subject")
+                    SubjectFragmentDirections.actionSubjectFragmentToSubjectFormFragment(getString(R.string.title_create_subject))
                 findNavController().navigate(action)
             }
 
             setFragmentResultListener("subjectFormResult") { _, bundle ->
                 when (bundle.getInt("result")) {
                     MainActivity.FORM_CREATE_OK_FLAG ->
-                        Snackbar.make(view, "Subject created successfully", Snackbar.LENGTH_SHORT)
+                        Snackbar.make(view, R.string.success_subject_created, Snackbar.LENGTH_SHORT)
                             .show()
                     MainActivity.FORM_EDIT_OK_FLAG ->
-                        Snackbar.make(view, "Subject updated successfully", Snackbar.LENGTH_SHORT)
+                        Snackbar.make(view, R.string.success_subject_updated, Snackbar.LENGTH_SHORT)
                             .show()
                 }
             }

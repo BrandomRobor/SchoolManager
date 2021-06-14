@@ -15,6 +15,7 @@ import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.collect
+import me.brandom.schoolmanager.R
 import me.brandom.schoolmanager.databinding.FragmentSubjectFormBinding
 
 @AndroidEntryPoint
@@ -58,7 +59,8 @@ class SubjectFormFragment : Fragment() {
             viewModel.subjectFormEvents.collect {
                 when (it) {
                     is SubjectFormViewModel.SubjectFormEvents.InvalidInput ->
-                        Snackbar.make(view, "Pepega", Snackbar.LENGTH_SHORT).show()
+                        Snackbar.make(view, R.string.error_missing_required, Snackbar.LENGTH_SHORT)
+                            .show()
                     is SubjectFormViewModel.SubjectFormEvents.ValidInput -> {
                         setFragmentResult("subjectFormResult", bundleOf("result" to it.code))
                         findNavController().popBackStack()

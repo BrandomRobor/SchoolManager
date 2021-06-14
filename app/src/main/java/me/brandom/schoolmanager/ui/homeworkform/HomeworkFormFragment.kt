@@ -138,7 +138,8 @@ class HomeworkFormFragment : Fragment() {
             viewModel.homeworkFormEvents.collect { event ->
                 when (event) {
                     is HomeworkFormViewModel.HomeworkFormEvents.InvalidInput -> {
-                        Snackbar.make(view, "Pepega", Snackbar.LENGTH_SHORT).show()
+                        Snackbar.make(view, R.string.error_missing_required, Snackbar.LENGTH_SHORT)
+                            .show()
                     }
                     is HomeworkFormViewModel.HomeworkFormEvents.ValidInput -> {
                         setFragmentResult("formResult", bundleOf("result" to event.code))

@@ -14,6 +14,7 @@ import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.collect
+import me.brandom.schoolmanager.R
 import me.brandom.schoolmanager.database.entities.Homework
 import me.brandom.schoolmanager.databinding.FragmentHomeBinding
 import me.brandom.schoolmanager.ui.MainActivity
@@ -65,11 +66,14 @@ class HomeFragment : Fragment(), HomeworkListAdapter.HomeworkManager {
                 when (it) {
                     is HomeworkViewModel.HomeworkEvents.CanEnterForm -> {
                         val action =
-                            HomeFragmentDirections.actionHomeFragmentToHomeworkFormFragment("Create homework")
+                            HomeFragmentDirections.actionHomeFragmentToHomeworkFormFragment(
+                                getString(R.string.title_create_homework)
+                            )
                         findNavController().navigate(action)
                     }
                     is HomeworkViewModel.HomeworkEvents.CannotEnterForm ->
-                        Snackbar.make(view, "Pepega", Snackbar.LENGTH_SHORT).show()
+                        Snackbar.make(view, R.string.error_no_subjects, Snackbar.LENGTH_SHORT)
+                            .show()
                 }
             }
         }
@@ -77,10 +81,10 @@ class HomeFragment : Fragment(), HomeworkListAdapter.HomeworkManager {
         setFragmentResultListener("formResult") { _, bundle ->
             when (bundle.getInt("result")) {
                 MainActivity.FORM_CREATE_OK_FLAG ->
-                    Snackbar.make(view, "Homework created successfully", Snackbar.LENGTH_SHORT)
+                    Snackbar.make(view, R.string.success_homework_created, Snackbar.LENGTH_SHORT)
                         .show()
                 MainActivity.FORM_EDIT_OK_FLAG ->
-                    Snackbar.make(view, "Homework updated successfully", Snackbar.LENGTH_SHORT)
+                    Snackbar.make(view, R.string.success_homework_updated, Snackbar.LENGTH_SHORT)
                         .show()
             }
         }
@@ -88,8 +92,8 @@ class HomeFragment : Fragment(), HomeworkListAdapter.HomeworkManager {
 
     override fun deleteHomework(homework: Homework) {
         viewModel.deleteHomework(homework)
-        Snackbar.make(requireView(), "Homework deleted successfully", Snackbar.LENGTH_LONG)
-            .setAction("Undo") {
+        Snackbar.make(requireView(), R.string.success_homework_deleted, Snackbar.LENGTH_LONG)
+            .setAction(R.string.action_undo_delete) {
                 viewModel.onUndoHomeworkClick(homework)
             }
             .show()

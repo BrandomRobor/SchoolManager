@@ -1,6 +1,23 @@
 <resources>
     <string name="app_name">School Manager</string>
 
+    <string name="error_no_subjects">No subjects added yet</string>
+    <string name="error_missing_required">Please fill all required fields</string>
+
+    <string name="success_homework_created">Homework created successfully</string>
+    <string name="success_homework_updated">Homework updated successfully</string>
+    <string name="success_homework_deleted">Homework deleted successfully</string>
+    <string name="success_subject_created">Subject created successfully</string>
+    <string name="success_subject_updated">Subject created successfully</string>
+    <string name="success_subject_deleted">Subject deleted successfully</string>
+
+    <string name="title_create_homework">Create homework</string>
+    <string name="title_create_subject">Create subject</string>
+
+    <string name="action_undo_delete">Undo</string>
+
+    <!-- TODO Someday i'll change the id's of these strings. -->
+
     <string name="fragment_home_label">Home</string>
     <string name="fragment_home_no_items">No homework added yet.</string>
     <string name="fragment_home_edit_item">Edit</string>
