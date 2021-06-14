@@ -13,6 +13,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.collect
 import me.brandom.schoolmanager.databinding.FragmentSubjectFormBinding
 
@@ -21,6 +22,7 @@ class SubjectFormFragment : Fragment() {
     private var _binding: FragmentSubjectFormBinding? = null
     private val binding get() = _binding!!
     private val viewModel by viewModels<SubjectFormViewModel>()
+    private var subjectFormEventsJob: Job? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -52,7 +54,7 @@ class SubjectFormFragment : Fragment() {
             }
         }
 
-        viewLifecycleOwner.lifecycleScope.launchWhenStarted {
+        subjectFormEventsJob = viewLifecycleOwner.lifecycleScope.launchWhenStarted {
             viewModel.subjectFormEvents.collect {
                 when (it) {
                     is SubjectFormViewModel.SubjectFormEvents.InvalidInput ->
@@ -68,6 +70,7 @@ class SubjectFormFragment : Fragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
+        subjectFormEventsJob?.cancel()
         _binding = null
     }
 }

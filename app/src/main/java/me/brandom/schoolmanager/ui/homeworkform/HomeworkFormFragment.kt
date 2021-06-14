@@ -19,8 +19,8 @@ import androidx.navigation.fragment.findNavController
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.textfield.MaterialAutoCompleteTextView
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.first
 import me.brandom.schoolmanager.R
 import me.brandom.schoolmanager.database.entities.Subject
 import me.brandom.schoolmanager.databinding.FragmentHomeworkFormBinding
@@ -32,6 +32,8 @@ class HomeworkFormFragment : Fragment() {
     private var _binding: FragmentHomeworkFormBinding? = null
     private val binding get() = _binding!!
     private val viewModel by viewModels<HomeworkFormViewModel>()
+    private var subjectListJob: Job? = null
+    private var homeworkFormEventsJob: Job? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -113,15 +115,17 @@ class HomeworkFormFragment : Fragment() {
                     viewModel.homeworkSubjectId = adapter.getItem(position)?.id!!
                 }
 
-            viewLifecycleOwner.lifecycleScope.launchWhenStarted {
-                val list = viewModel.subjectList.first()
-                adapter.addAll(list)
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
-                    autoCompleteTextView.setText(list[0].toString(), false)
-                } else {
-                    autoCompleteTextView.setText(list[0].toString())
+            subjectListJob = viewLifecycleOwner.lifecycleScope.launchWhenStarted {
+                viewModel.subjectList.collect {
+                    adapter.addAll(it)
+                    val firstSubject = it.firstOrNull()
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+                        autoCompleteTextView.setText(firstSubject.toString(), false)
+                    } else {
+                        autoCompleteTextView.setText(firstSubject.toString())
+                    }
+                    viewModel.homeworkSubjectId = firstSubject?.id ?: 0
                 }
-                viewModel.homeworkSubjectId = list[0].id
             }
 
             fragmentAddHomeworkDoneFab.setOnClickListener {
@@ -130,7 +134,7 @@ class HomeworkFormFragment : Fragment() {
             }
         }
 
-        viewLifecycleOwner.lifecycleScope.launchWhenStarted {
+        homeworkFormEventsJob = viewLifecycleOwner.lifecycleScope.launchWhenStarted {
             viewModel.homeworkFormEvents.collect { event ->
                 when (event) {
                     is HomeworkFormViewModel.HomeworkFormEvents.InvalidInput -> {
@@ -147,6 +151,8 @@ class HomeworkFormFragment : Fragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
+        homeworkFormEventsJob?.cancel()
+        subjectListJob?.cancel()
         _binding = null
     }
 }

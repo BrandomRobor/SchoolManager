@@ -5,22 +5,20 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.asSharedFlow
-import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.receiveAsFlow
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import me.brandom.schoolmanager.database.daos.HomeworkDao
 import me.brandom.schoolmanager.database.daos.SubjectDao
 import me.brandom.schoolmanager.database.entities.Homework
-import me.brandom.schoolmanager.database.entities.Subject
 import me.brandom.schoolmanager.ui.MainActivity
 import javax.inject.Inject
 
 @HiltViewModel
 class HomeworkFormViewModel @Inject constructor(
     private val homeworkDao: HomeworkDao,
-    private val subjectDao: SubjectDao,
+    subjectDao: SubjectDao,
     private val state: SavedStateHandle
 ) : ViewModel() {
     val homework = state.get<Homework>("homework")
@@ -58,14 +56,8 @@ class HomeworkFormViewModel @Inject constructor(
     private val homeworkFormEventsChannel = Channel<HomeworkFormEvents>()
     val homeworkFormEvents = homeworkFormEventsChannel.receiveAsFlow()
 
-    private val subjectListFlow = MutableSharedFlow<List<Subject>>()
-    val subjectList = subjectListFlow.asSharedFlow()
-
-    init {
-        viewModelScope.launch {
-            subjectListFlow.emit(subjectDao.getAllSubjects().first())
-        }
-    }
+    val subjectList =
+        subjectDao.getAllSubjects().stateIn(viewModelScope, SharingStarted.Eagerly, emptyList())
 
     fun onSavedClick() {
         if (homeworkName.isBlank()) {

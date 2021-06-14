@@ -12,6 +12,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.collect
 import me.brandom.schoolmanager.database.entities.Homework
 import me.brandom.schoolmanager.databinding.FragmentHomeBinding
@@ -22,6 +23,8 @@ class HomeFragment : Fragment(), HomeworkListAdapter.HomeworkManager {
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
     private val viewModel by viewModels<HomeworkViewModel>()
+    private var homeworkEventsJob: Job? = null
+    private var retrievalStateJob: Job? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -40,7 +43,7 @@ class HomeFragment : Fragment(), HomeworkListAdapter.HomeworkManager {
             fragmentHomeRecyclerView.setHasFixedSize(true)
             fragmentHomeRecyclerView.adapter = adapter
 
-            viewLifecycleOwner.lifecycleScope.launchWhenStarted {
+            retrievalStateJob = viewLifecycleOwner.lifecycleScope.launchWhenStarted {
                 viewModel.retrievalState.collect {
                     fragmentHomeProgressBar.isVisible =
                         it is HomeworkViewModel.HomeworkRetrievalState.Loading
@@ -57,7 +60,7 @@ class HomeFragment : Fragment(), HomeworkListAdapter.HomeworkManager {
             }
         }
 
-        viewLifecycleOwner.lifecycleScope.launchWhenStarted {
+        homeworkEventsJob = viewLifecycleOwner.lifecycleScope.launchWhenStarted {
             viewModel.homeworkEvents.collect {
                 when (it) {
                     is HomeworkViewModel.HomeworkEvents.CanEnterForm -> {
@@ -94,6 +97,8 @@ class HomeFragment : Fragment(), HomeworkListAdapter.HomeworkManager {
 
     override fun onDestroyView() {
         super.onDestroyView()
+        retrievalStateJob?.cancel()
+        homeworkEventsJob?.cancel()
         _binding = null
     }
 

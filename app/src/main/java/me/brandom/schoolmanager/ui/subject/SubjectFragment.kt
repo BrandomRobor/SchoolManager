@@ -12,6 +12,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.collect
 import me.brandom.schoolmanager.databinding.FragmentSubjectBinding
 import me.brandom.schoolmanager.ui.MainActivity
@@ -21,6 +22,7 @@ class SubjectFragment : Fragment() {
     private var _binding: FragmentSubjectBinding? = null
     private val binding get() = _binding!!
     private val viewModel by viewModels<SubjectViewModel>()
+    private var retrievalStateJob: Job? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -39,7 +41,7 @@ class SubjectFragment : Fragment() {
             fragmentSubjectRecyclerView.setHasFixedSize(true)
             fragmentSubjectRecyclerView.adapter = adapter
 
-            viewLifecycleOwner.lifecycleScope.launchWhenStarted {
+            retrievalStateJob = viewLifecycleOwner.lifecycleScope.launchWhenStarted {
                 viewModel.retrievalState.collect {
                     if (it is SubjectViewModel.SubjectRetrievalState.Success) {
                         if (it.subjectList.isEmpty()) {
@@ -73,6 +75,7 @@ class SubjectFragment : Fragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
+        retrievalStateJob?.cancel()
         _binding = null
     }
 }
