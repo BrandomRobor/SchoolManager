@@ -19,6 +19,9 @@ interface SubjectDao {
     @Delete
     suspend fun deleteSubject(subject: Subject)
 
+    @Query("DELETE FROM subject WHERE id = :id")
+    suspend fun deleteSubjectById(id: Int)
+
     @Query("SELECT * FROM subject ORDER BY name")
     fun getAllSubjects(): Flow<List<Subject>>
 

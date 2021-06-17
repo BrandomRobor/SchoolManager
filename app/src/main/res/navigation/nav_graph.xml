@@ -49,4 +49,15 @@
             android:defaultValue="0"
             app:argType="integer" />
     </fragment>
+    <dialog
+        android:id="@+id/deleteSubjectDialogFragment"
+        android:name="me.brandom.schoolmanager.ui.deletesubject.DeleteSubjectDialogFragment"
+        android:label="DeleteSubjectDialogFragment">
+        <argument
+            android:name="subjectId"
+            app:argType="integer" />
+    </dialog>
+    <action
+        android:id="@+id/action_global_deleteSubjectDialogFragment"
+        app:destination="@id/deleteSubjectDialogFragment" />
 </navigation>

@@ -48,10 +48,8 @@ class HomeworkListAdapter(val homeworkManager: HomeworkManager) :
                 }
 
                 menu.setOnMenuItemClickListener {
-                    val position = adapterPosition
-
-                    if (position != RecyclerView.NO_POSITION) {
-                        val homework = getItem(position).homework
+                    if (adapterPosition != RecyclerView.NO_POSITION) {
+                        val homework = getItem(adapterPosition).homework
                         when (it.itemId) {
                             R.id.homework_edit_item -> {
                                 true

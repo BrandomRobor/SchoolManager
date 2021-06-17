@@ -11,7 +11,8 @@ import kotlinx.parcelize.Parcelize
     foreignKeys = [ForeignKey(
         entity = Subject::class,
         parentColumns = ["id"],
-        childColumns = ["subjectId"]
+        childColumns = ["subjectId"],
+        onDelete = ForeignKey.CASCADE
     )]
 )
 @Parcelize

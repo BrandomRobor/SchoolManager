@@ -15,11 +15,12 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.collect
 import me.brandom.schoolmanager.R
+import me.brandom.schoolmanager.database.entities.Subject
 import me.brandom.schoolmanager.databinding.FragmentSubjectBinding
 import me.brandom.schoolmanager.ui.MainActivity
 
 @AndroidEntryPoint
-class SubjectFragment : Fragment() {
+class SubjectFragment : Fragment(), SubjectListAdapter.SubjectManager {
     private var _binding: FragmentSubjectBinding? = null
     private val binding get() = _binding!!
     private val viewModel by viewModels<SubjectViewModel>()
@@ -36,7 +37,7 @@ class SubjectFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val adapter = SubjectListAdapter()
+        val adapter = SubjectListAdapter(this)
 
         binding.apply {
             fragmentSubjectRecyclerView.setHasFixedSize(true)
@@ -71,6 +72,11 @@ class SubjectFragment : Fragment() {
                 }
             }
         }
+    }
+
+    override fun deleteSubject(subject: Subject) {
+        val action = SubjectFragmentDirections.actionGlobalDeleteSubjectDialogFragment(subject.id)
+        findNavController().navigate(action)
     }
 
     override fun onDestroyView() {
