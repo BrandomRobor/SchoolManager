@@ -65,8 +65,8 @@ dependencies {
     kapt("androidx.room:room-compiler:2.3.0")
 
     // Dagger Hilt (dependency injection helper)
-    implementation("com.google.dagger:hilt-android:2.36")
-    kapt("com.google.dagger:hilt-compiler:2.36")
+    implementation("com.google.dagger:hilt-android:2.37")
+    kapt("com.google.dagger:hilt-compiler:2.37")
 
     // Coroutines library
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.5.0")
@@ -80,8 +80,8 @@ dependencies {
     implementation("androidx.navigation:navigation-ui-ktx:2.3.5")
 
     // LeakCanary (to detect memory leaks)
-    //debugImplementation("com.squareup.leakcanary:leakcanary-android:2.7")
+    debugImplementation("com.squareup.leakcanary:leakcanary-android:2.7")
 
     // Fragment library
-    implementation("androidx.fragment:fragment-ktx:1.3.4")
+    implementation("androidx.fragment:fragment-ktx:1.3.5")
 }
