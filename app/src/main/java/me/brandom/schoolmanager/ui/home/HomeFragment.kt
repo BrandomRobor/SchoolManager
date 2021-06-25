@@ -65,6 +65,7 @@ class HomeFragment : Fragment(), HomeworkListAdapter.HomeworkManager {
             viewModel.homeworkEvents.collect {
                 when (it) {
                     is HomeworkSharedViewModel.HomeworkEvents.CanEnterForm -> {
+                        viewModel.homework = null
                         val action =
                             HomeFragmentDirections.actionHomeFragmentToHomeworkFormFragment(
                                 getString(R.string.title_create_homework)
@@ -97,6 +98,13 @@ class HomeFragment : Fragment(), HomeworkListAdapter.HomeworkManager {
                 viewModel.onUndoHomeworkClick(homework)
             }
             .show()
+    }
+
+    override fun editHomework(homework: Homework) {
+        viewModel.homework = homework
+        val action =
+            HomeFragmentDirections.actionHomeFragmentToHomeworkFormFragment("Edit homework")
+        findNavController().navigate(action)
     }
 
     override fun onDestroyView() {

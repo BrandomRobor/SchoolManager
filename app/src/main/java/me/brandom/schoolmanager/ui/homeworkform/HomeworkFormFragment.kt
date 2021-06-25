@@ -57,6 +57,11 @@ class HomeworkFormFragment : Fragment() {
             ArrayAdapter<Subject>(requireContext(), R.layout.support_simple_spinner_dropdown_item)
 
         binding.apply {
+            fragmentAddHomeworkNameInput.editText?.setText(viewModel.homeworkName)
+            fragmentAddHomeworkDescriptionInput.editText?.setText(viewModel.homeworkDescription)
+            fragmentAddHomeworkDateInput.editText?.setText(viewModel.filledDate)
+            fragmentAddHomeworkTimeInput.editText?.setText(viewModel.filledTime)
+
             fragmentAddHomeworkNameInput.editText?.addTextChangedListener {
                 viewModel.homeworkName = it.toString()
             }
@@ -82,7 +87,7 @@ class HomeworkFormFragment : Fragment() {
                     ).show()
                 }
                 it.addTextChangedListener { text ->
-                    viewModel.filledDate = text!!.isNotEmpty()
+                    viewModel.filledDate = text.toString()
                 }
             }
 
@@ -104,7 +109,7 @@ class HomeworkFormFragment : Fragment() {
                     ).show()
                 }
                 it.addTextChangedListener { text ->
-                    viewModel.filledTime = text!!.isNotEmpty()
+                    viewModel.filledTime = text.toString()
                 }
             }
 
@@ -119,13 +124,13 @@ class HomeworkFormFragment : Fragment() {
             subjectListJob = viewLifecycleOwner.lifecycleScope.launchWhenStarted {
                 viewModel.subjectList.collect {
                     adapter.addAll(it)
-                    val firstSubject = it.firstOrNull()
+                    val subject = it.find { s -> s.id == viewModel.homework?.subjectId } ?: it[0]
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
-                        autoCompleteTextView.setText(firstSubject.toString(), false)
+                        autoCompleteTextView.setText(subject.name, false)
                     } else {
-                        autoCompleteTextView.setText(firstSubject.toString())
+                        autoCompleteTextView.setText(subject.name)
                     }
-                    viewModel.homeworkSubjectId = firstSubject?.id ?: 0
+                    viewModel.homeworkSubjectId = subject.id
                 }
             }
 

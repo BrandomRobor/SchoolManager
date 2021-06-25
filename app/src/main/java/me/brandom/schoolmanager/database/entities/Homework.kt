@@ -6,6 +6,7 @@ import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
 import kotlinx.parcelize.Parcelize
+import java.text.DateFormat
 
 @Entity(
     foreignKeys = [ForeignKey(
@@ -24,4 +25,7 @@ data class Homework(
     val description: String? = null,
     @PrimaryKey(autoGenerate = true)
     val hwId: Int = 0
-) : Parcelable
+) : Parcelable {
+    val formattedDate: String get() = DateFormat.getDateInstance(DateFormat.SHORT).format(deadline)
+    val formattedTime: String get() = DateFormat.getTimeInstance(DateFormat.SHORT).format(deadline)
+}

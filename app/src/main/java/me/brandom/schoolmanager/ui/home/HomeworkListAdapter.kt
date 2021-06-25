@@ -52,6 +52,7 @@ class HomeworkListAdapter(val homeworkManager: HomeworkManager) :
                         val homework = getItem(adapterPosition).homework
                         when (it.itemId) {
                             R.id.homework_edit_item -> {
+                                homeworkManager.editHomework(homework)
                                 true
                             }
                             R.id.homework_delete_item -> {
@@ -97,5 +98,6 @@ class HomeworkListAdapter(val homeworkManager: HomeworkManager) :
 
     interface HomeworkManager {
         fun deleteHomework(homework: Homework)
+        fun editHomework(homework: Homework)
     }
 }

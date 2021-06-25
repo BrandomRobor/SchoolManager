@@ -26,37 +26,26 @@ class HomeworkSharedViewModel @Inject constructor(
     private val subjectDao: SubjectDao,
     private val state: SavedStateHandle
 ) : ViewModel() {
-    val homework = state.get<Homework>("homework")
-    var homeworkName = state.get<String>("homeworkName") ?: homework?.hwName.orEmpty()
-        set(value) {
-            field = value
-            state.set("homeworkName", value)
-        }
-    var homeworkDescription = state.get<String>("homeworkDescription")
-        set(value) {
-            field = value
-            state.set("homeworkDescription", value)
-        }
-    var filledDate = state.get<Boolean>("filledDate") ?: false
-        set(value) {
-            field = value
-            state.set("filledDate", value)
-        }
-    var filledTime = state.get<Boolean>("filledTime") ?: false
-        set(value) {
-            field = value
-            state.set("filledTime", value)
-        }
-    var homeworkDeadline = state.get<Long>("homeworkDeadline") ?: System.currentTimeMillis()
-        set(value) {
-            field = value
-            state.set("homeworkDeadline", value)
-        }
-    var homeworkSubjectId = state.get<Int>("homeworkSubjectId") ?: 0
-        set(value) {
-            field = value
-            state.set("homeworkSubjectId", value)
-        }
+    var homework: Homework? = null
+
+    var homeworkName = ""
+        get() = state.get<String>("homeworkName") ?: homework?.hwName ?: field
+        set(value) = state.set("homeworkName", value)
+    var homeworkDescription = ""
+        get() = state.get<String>("homeworkDescription") ?: homework?.description ?: field
+        set(value) = state.set("homeworkDescription", value)
+    var filledDate = ""
+        get() = state.get<String>("filledDate") ?: homework?.formattedDate ?: field
+        set(value) = state.set("filledDate", value)
+    var filledTime = ""
+        get() = state.get<String>("filledTime") ?: homework?.formattedTime ?: field
+        set(value) = state.set("filledTime", value)
+    var homeworkDeadline = System.currentTimeMillis()
+        get() = state.get<Long>("homeworkDeadline") ?: homework?.deadline ?: field
+        set(value) = state.set("homeworkDeadline", value)
+    var homeworkSubjectId = 0
+        get() = state.get<Int>("homeworkSubjectId") ?: homework?.subjectId ?: field
+        set(value) = state.set("homeworkSubjectId", value)
 
     private val _retrievalState =
         MutableStateFlow<HomeworkRetrievalState>(HomeworkRetrievalState.Loading)
@@ -103,7 +92,7 @@ class HomeworkSharedViewModel @Inject constructor(
             return
         }
 
-        if (!filledDate || !filledTime) {
+        if (filledDate.isEmpty() || filledTime.isEmpty()) {
             sendInvalidInputEvent()
             return
         }
@@ -114,22 +103,22 @@ class HomeworkSharedViewModel @Inject constructor(
         }
 
         val clearDescription =
-            if (homeworkDescription.isNullOrBlank()) null else homeworkDescription
+            if (homeworkDescription.isBlank()) null else homeworkDescription
 
-        if (homework == null) {
-            val newHomework =
-                Homework(homeworkName, homeworkDeadline, homeworkSubjectId, clearDescription)
-            createHomework(newHomework)
-            sendValidInputEvent(HomeworkFormEvents.ValidInput(MainActivity.FORM_CREATE_OK_FLAG))
-        } else {
-            val updatedHomework = homework.copy(
+        homework?.also {
+            val updatedHomework = it.copy(
                 hwName = homeworkName,
                 deadline = homeworkDeadline,
                 subjectId = homeworkSubjectId,
                 description = clearDescription
             )
             updateHomework(updatedHomework)
-            sendValidInputEvent(HomeworkFormEvents.ValidInput(MainActivity.FORM_EDIT_OK_FLAG))
+            sendValidInputEvent(MainActivity.FORM_EDIT_OK_FLAG)
+        } ?: run {
+            val newHomework =
+                Homework(homeworkName, homeworkDeadline, homeworkSubjectId, clearDescription)
+            createHomework(newHomework)
+            sendValidInputEvent(MainActivity.FORM_CREATE_OK_FLAG)
         }
     }
 
@@ -137,8 +126,8 @@ class HomeworkSharedViewModel @Inject constructor(
         homeworkFormEventsChannel.send(HomeworkFormEvents.InvalidInput)
     }
 
-    private fun sendValidInputEvent(event: HomeworkFormEvents.ValidInput) = viewModelScope.launch {
-        homeworkFormEventsChannel.send(event)
+    private fun sendValidInputEvent(code: Int) = viewModelScope.launch {
+        homeworkFormEventsChannel.send(HomeworkFormEvents.ValidInput(code))
     }
 
     private fun createHomework(homework: Homework) = viewModelScope.launch {
