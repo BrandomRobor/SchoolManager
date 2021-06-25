@@ -48,10 +48,10 @@ class HomeworkFormFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val defaultTime = GregorianCalendar()
-        val selectedDeadline = GregorianCalendar()
-        selectedDeadline.set(GregorianCalendar.SECOND, 0)
-        selectedDeadline.set(GregorianCalendar.MILLISECOND, 0)
+        val homeworkDeadline = GregorianCalendar()
+        homeworkDeadline.timeInMillis = viewModel.homeworkDeadline
+        homeworkDeadline.set(GregorianCalendar.SECOND, 0)
+        homeworkDeadline.set(GregorianCalendar.MILLISECOND, 0)
 
         val adapter =
             ArrayAdapter<Subject>(requireContext(), R.layout.support_simple_spinner_dropdown_item)
@@ -75,15 +75,15 @@ class HomeworkFormFragment : Fragment() {
                     DatePickerDialog(
                         requireContext(),
                         { _, year, month, dayOfMonth ->
-                            selectedDeadline.set(year, month, dayOfMonth)
+                            homeworkDeadline.set(year, month, dayOfMonth)
                             it.setText(
                                 DateFormat.getDateInstance(DateFormat.SHORT)
-                                    .format(selectedDeadline.time)
+                                    .format(homeworkDeadline.time)
                             )
                         },
-                        defaultTime.get(GregorianCalendar.YEAR),
-                        defaultTime.get(GregorianCalendar.MONTH),
-                        defaultTime.get(GregorianCalendar.DAY_OF_MONTH)
+                        homeworkDeadline.get(GregorianCalendar.YEAR),
+                        homeworkDeadline.get(GregorianCalendar.MONTH),
+                        homeworkDeadline.get(GregorianCalendar.DAY_OF_MONTH)
                     ).show()
                 }
                 it.addTextChangedListener { text ->
@@ -96,11 +96,11 @@ class HomeworkFormFragment : Fragment() {
                     TimePickerDialog(
                         requireContext(),
                         { _, hourOfDay, minute ->
-                            selectedDeadline.set(GregorianCalendar.HOUR_OF_DAY, hourOfDay)
-                            selectedDeadline.set(GregorianCalendar.MINUTE, minute)
+                            homeworkDeadline.set(GregorianCalendar.HOUR_OF_DAY, hourOfDay)
+                            homeworkDeadline.set(GregorianCalendar.MINUTE, minute)
                             it.setText(
                                 DateFormat.getTimeInstance(DateFormat.SHORT)
-                                    .format(selectedDeadline.time)
+                                    .format(homeworkDeadline.time)
                             )
                         },
                         12,
@@ -135,7 +135,7 @@ class HomeworkFormFragment : Fragment() {
             }
 
             fragmentAddHomeworkDoneFab.setOnClickListener {
-                viewModel.homeworkDeadline = selectedDeadline.timeInMillis
+                viewModel.homeworkDeadline = homeworkDeadline.timeInMillis
                 viewModel.onSavedClick()
             }
         }
