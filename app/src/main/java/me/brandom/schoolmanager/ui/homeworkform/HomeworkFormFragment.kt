@@ -12,8 +12,8 @@ import android.widget.ArrayAdapter
 import androidx.core.os.bundleOf
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.setFragmentResult
-import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.snackbar.Snackbar
@@ -24,6 +24,7 @@ import kotlinx.coroutines.flow.collect
 import me.brandom.schoolmanager.R
 import me.brandom.schoolmanager.database.entities.Subject
 import me.brandom.schoolmanager.databinding.FragmentHomeworkFormBinding
+import me.brandom.schoolmanager.ui.home.HomeworkSharedViewModel
 import java.text.DateFormat
 import java.util.GregorianCalendar
 
@@ -31,7 +32,7 @@ import java.util.GregorianCalendar
 class HomeworkFormFragment : Fragment() {
     private var _binding: FragmentHomeworkFormBinding? = null
     private val binding get() = _binding!!
-    private val viewModel by viewModels<HomeworkFormViewModel>()
+    private val viewModel: HomeworkSharedViewModel by activityViewModels()
     private var subjectListJob: Job? = null
     private var homeworkFormEventsJob: Job? = null
 
@@ -137,11 +138,11 @@ class HomeworkFormFragment : Fragment() {
         homeworkFormEventsJob = viewLifecycleOwner.lifecycleScope.launchWhenStarted {
             viewModel.homeworkFormEvents.collect { event ->
                 when (event) {
-                    is HomeworkFormViewModel.HomeworkFormEvents.InvalidInput -> {
+                    is HomeworkSharedViewModel.HomeworkFormEvents.InvalidInput -> {
                         Snackbar.make(view, R.string.error_missing_required, Snackbar.LENGTH_SHORT)
                             .show()
                     }
-                    is HomeworkFormViewModel.HomeworkFormEvents.ValidInput -> {
+                    is HomeworkSharedViewModel.HomeworkFormEvents.ValidInput -> {
                         setFragmentResult("formResult", bundleOf("result" to event.code))
                         findNavController().popBackStack()
                     }

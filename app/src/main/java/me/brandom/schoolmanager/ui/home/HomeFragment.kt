@@ -6,8 +6,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.setFragmentResultListener
-import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.snackbar.Snackbar
@@ -23,7 +23,7 @@ import me.brandom.schoolmanager.ui.MainActivity
 class HomeFragment : Fragment(), HomeworkListAdapter.HomeworkManager {
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
-    private val viewModel by viewModels<HomeworkViewModel>()
+    private val viewModel: HomeworkSharedViewModel by activityViewModels()
     private var homeworkEventsJob: Job? = null
     private var retrievalStateJob: Job? = null
 
@@ -47,12 +47,12 @@ class HomeFragment : Fragment(), HomeworkListAdapter.HomeworkManager {
             retrievalStateJob = viewLifecycleOwner.lifecycleScope.launchWhenStarted {
                 viewModel.retrievalState.collect {
                     fragmentHomeProgressBar.isVisible =
-                        it is HomeworkViewModel.HomeworkRetrievalState.Loading
+                        it is HomeworkSharedViewModel.HomeworkRetrievalState.Loading
                     fragmentHomeRecyclerView.isVisible =
-                        it is HomeworkViewModel.HomeworkRetrievalState.Success && it.homeworkList.isNotEmpty()
+                        it is HomeworkSharedViewModel.HomeworkRetrievalState.Success && it.homeworkList.isNotEmpty()
                     fragmentHomeNoItemsMessage.isVisible =
-                        it is HomeworkViewModel.HomeworkRetrievalState.Success && it.homeworkList.isEmpty()
-                    adapter.submitList((it as? HomeworkViewModel.HomeworkRetrievalState.Success)?.homeworkList)
+                        it is HomeworkSharedViewModel.HomeworkRetrievalState.Success && it.homeworkList.isEmpty()
+                    adapter.submitList((it as? HomeworkSharedViewModel.HomeworkRetrievalState.Success)?.homeworkList)
                 }
             }
 
@@ -64,14 +64,14 @@ class HomeFragment : Fragment(), HomeworkListAdapter.HomeworkManager {
         homeworkEventsJob = viewLifecycleOwner.lifecycleScope.launchWhenStarted {
             viewModel.homeworkEvents.collect {
                 when (it) {
-                    is HomeworkViewModel.HomeworkEvents.CanEnterForm -> {
+                    is HomeworkSharedViewModel.HomeworkEvents.CanEnterForm -> {
                         val action =
                             HomeFragmentDirections.actionHomeFragmentToHomeworkFormFragment(
                                 getString(R.string.title_create_homework)
                             )
                         findNavController().navigate(action)
                     }
-                    is HomeworkViewModel.HomeworkEvents.CannotEnterForm ->
+                    is HomeworkSharedViewModel.HomeworkEvents.CannotEnterForm ->
                         Snackbar.make(view, R.string.error_no_subjects, Snackbar.LENGTH_SHORT)
                             .show()
                 }

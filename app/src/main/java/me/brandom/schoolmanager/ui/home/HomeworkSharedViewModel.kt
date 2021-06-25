@@ -1,24 +1,29 @@
-package me.brandom.schoolmanager.ui.homeworkform
+package me.brandom.schoolmanager.ui.home
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import me.brandom.schoolmanager.database.daos.HomeworkDao
 import me.brandom.schoolmanager.database.daos.SubjectDao
 import me.brandom.schoolmanager.database.entities.Homework
+import me.brandom.schoolmanager.database.entities.HomeworkWithSubject
 import me.brandom.schoolmanager.ui.MainActivity
 import javax.inject.Inject
 
 @HiltViewModel
-class HomeworkFormViewModel @Inject constructor(
+class HomeworkSharedViewModel @Inject constructor(
     private val homeworkDao: HomeworkDao,
-    subjectDao: SubjectDao,
+    private val subjectDao: SubjectDao,
     private val state: SavedStateHandle
 ) : ViewModel() {
     val homework = state.get<Homework>("homework")
@@ -53,11 +58,44 @@ class HomeworkFormViewModel @Inject constructor(
             state.set("homeworkSubjectId", value)
         }
 
+    private val _retrievalState =
+        MutableStateFlow<HomeworkRetrievalState>(HomeworkRetrievalState.Loading)
+    val retrievalState: StateFlow<HomeworkRetrievalState> = _retrievalState
+
+    private val homeworkEventsChannel = Channel<HomeworkEvents>()
+    val homeworkEvents = homeworkEventsChannel.receiveAsFlow()
+
     private val homeworkFormEventsChannel = Channel<HomeworkFormEvents>()
     val homeworkFormEvents = homeworkFormEventsChannel.receiveAsFlow()
 
     val subjectList =
         subjectDao.getAllSubjects().stateIn(viewModelScope, SharingStarted.Eagerly, emptyList())
+
+    init {
+        viewModelScope.launch {
+            homeworkDao.getAllHomeworkWithSubject().collect {
+                _retrievalState.value = HomeworkRetrievalState.Success(it)
+            }
+        }
+    }
+
+    fun onUndoHomeworkClick(homework: Homework) = viewModelScope.launch {
+        homeworkDao.insertHomework(homework)
+    }
+
+    fun deleteHomework(homework: Homework) {
+        viewModelScope.launch {
+            homeworkDao.deleteHomework(homework)
+        }
+    }
+
+    fun onAddHomeworkClick() = viewModelScope.launch {
+        if (subjectDao.getSubjectCount().first() > 0) {
+            homeworkEventsChannel.send(HomeworkEvents.CanEnterForm)
+        } else {
+            homeworkEventsChannel.send(HomeworkEvents.CannotEnterForm)
+        }
+    }
 
     fun onSavedClick() {
         if (homeworkName.isBlank()) {
@@ -109,6 +147,16 @@ class HomeworkFormViewModel @Inject constructor(
 
     private fun updateHomework(homework: Homework) = viewModelScope.launch {
         homeworkDao.updateHomework(homework)
+    }
+
+    sealed class HomeworkRetrievalState {
+        object Loading : HomeworkRetrievalState()
+        data class Success(val homeworkList: List<HomeworkWithSubject>) : HomeworkRetrievalState()
+    }
+
+    sealed class HomeworkEvents {
+        object CanEnterForm : HomeworkEvents()
+        object CannotEnterForm : HomeworkEvents()
     }
 
     sealed class HomeworkFormEvents {
