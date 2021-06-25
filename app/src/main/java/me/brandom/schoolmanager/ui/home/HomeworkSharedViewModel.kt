@@ -120,6 +120,7 @@ class HomeworkSharedViewModel @Inject constructor(
             createHomework(newHomework)
             sendValidInputEvent(MainActivity.FORM_CREATE_OK_FLAG)
         }
+        clearSavedState()
     }
 
     private fun sendInvalidInputEvent() = viewModelScope.launch {
@@ -136,6 +137,16 @@ class HomeworkSharedViewModel @Inject constructor(
 
     private fun updateHomework(homework: Homework) = viewModelScope.launch {
         homeworkDao.updateHomework(homework)
+    }
+
+    // Hate this, but this is a downside of having a shared viewmodel
+    private fun clearSavedState() {
+        state.remove<String>("homeworkName")
+        state.remove<String>("homeworkDescription")
+        state.remove<String>("filledDate")
+        state.remove<String>("filledTime")
+        state.remove<Long>("homeworkDeadline")
+        state.remove<Int>("homeworkSubjectId")
     }
 
     sealed class HomeworkRetrievalState {
