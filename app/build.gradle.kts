@@ -85,3 +85,11 @@ dependencies {
     // Fragment library
     implementation("androidx.fragment:fragment-ktx:1.3.5")
 }
+
+kapt {
+    javacOptions {
+        option("-Adagger.fastInit=ENABLED")
+        option("-Adagger.hilt.android.internal.disableAndroidSuperclassValidation=true")
+    }
+    correctErrorTypes = true
+}
