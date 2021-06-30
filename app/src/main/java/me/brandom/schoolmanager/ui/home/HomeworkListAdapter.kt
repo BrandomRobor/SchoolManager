@@ -12,8 +12,6 @@ import me.brandom.schoolmanager.database.entities.Homework
 import me.brandom.schoolmanager.database.entities.HomeworkWithSubject
 import me.brandom.schoolmanager.database.entities.Subject
 import me.brandom.schoolmanager.databinding.ItemHomeworkBinding
-import java.text.DateFormat
-import java.text.SimpleDateFormat
 
 class HomeworkListAdapter(val homeworkManager: HomeworkManager) :
     ListAdapter<HomeworkWithSubject, HomeworkListAdapter.HomeworkListViewHolder>(differ) {
@@ -31,9 +29,6 @@ class HomeworkListAdapter(val homeworkManager: HomeworkManager) :
             ): Boolean =
                 oldItem.homework == newItem.homework
         }
-
-        val formatter: DateFormat =
-            SimpleDateFormat.getDateTimeInstance(SimpleDateFormat.MEDIUM, SimpleDateFormat.SHORT)
     }
 
     inner class HomeworkListViewHolder(private val binding: ItemHomeworkBinding) :
@@ -75,7 +70,7 @@ class HomeworkListAdapter(val homeworkManager: HomeworkManager) :
                 itemHomeworkDescription.isVisible = homework.description != null
                 itemHomeworkDescription.text = homework.description
 
-                itemHomeworkDeadline.text = formatter.format(homework.deadline)
+                itemHomeworkDeadline.text = homework.formattedDateTime
 
                 itemHomeworkSubject.text = subject.name
             }

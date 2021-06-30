@@ -25,4 +25,9 @@ data class Homework(
 ) {
     val formattedDate: String get() = DateFormat.getDateInstance(DateFormat.SHORT).format(deadline)
     val formattedTime: String get() = DateFormat.getTimeInstance(DateFormat.SHORT).format(deadline)
+    val formattedDateTime: String
+        get() = DateFormat.getDateTimeInstance(
+            DateFormat.MEDIUM,
+            DateFormat.SHORT
+        ).format(deadline)
 }
