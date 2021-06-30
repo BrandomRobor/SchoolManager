@@ -6,8 +6,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.setFragmentResultListener
-import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.snackbar.Snackbar
@@ -23,7 +23,7 @@ import me.brandom.schoolmanager.ui.MainActivity
 class SubjectFragment : Fragment(), SubjectListAdapter.SubjectManager {
     private var _binding: FragmentSubjectBinding? = null
     private val binding get() = _binding!!
-    private val viewModel by viewModels<SubjectViewModel>()
+    private val viewModel: SubjectSharedViewModel by activityViewModels()
     private var retrievalStateJob: Job? = null
 
     override fun onCreateView(
@@ -46,12 +46,12 @@ class SubjectFragment : Fragment(), SubjectListAdapter.SubjectManager {
             retrievalStateJob = viewLifecycleOwner.lifecycleScope.launchWhenStarted {
                 viewModel.retrievalState.collect {
                     fragmentSubjectProgressBar.isVisible =
-                        it is SubjectViewModel.SubjectRetrievalState.Loading
+                        it is SubjectSharedViewModel.SubjectRetrievalState.Loading
                     fragmentSubjectsNoItemsMessage.isVisible =
-                        it is SubjectViewModel.SubjectRetrievalState.Success && it.subjectList.isEmpty()
+                        it is SubjectSharedViewModel.SubjectRetrievalState.Success && it.subjectList.isEmpty()
                     fragmentSubjectRecyclerView.isVisible =
-                        it is SubjectViewModel.SubjectRetrievalState.Success && it.subjectList.isNotEmpty()
-                    adapter.submitList((it as? SubjectViewModel.SubjectRetrievalState.Success)?.subjectList)
+                        it is SubjectSharedViewModel.SubjectRetrievalState.Success && it.subjectList.isNotEmpty()
+                    adapter.submitList((it as? SubjectSharedViewModel.SubjectRetrievalState.Success)?.subjectList)
                 }
             }
 
@@ -76,6 +76,13 @@ class SubjectFragment : Fragment(), SubjectListAdapter.SubjectManager {
 
     override fun deleteSubject(subject: Subject) {
         val action = SubjectFragmentDirections.actionGlobalDeleteSubjectDialogFragment(subject.id)
+        findNavController().navigate(action)
+    }
+
+    override fun editSubject(subject: Subject) {
+        viewModel.subject = subject
+        val action =
+            SubjectFragmentDirections.actionSubjectFragmentToSubjectFormFragment("Edit subject")
         findNavController().navigate(action)
     }
 

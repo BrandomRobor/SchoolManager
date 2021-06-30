@@ -38,6 +38,10 @@ class SubjectListAdapter(private val subjectManager: SubjectManager) :
                     if (adapterPosition != RecyclerView.NO_POSITION) {
                         val subject = getItem(adapterPosition)
                         when (it.itemId) {
+                            R.id.homework_edit_item -> {
+                                subjectManager.editSubject(subject)
+                                true
+                            }
                             R.id.homework_delete_item -> {
                                 subjectManager.deleteSubject(subject)
                                 true
@@ -87,5 +91,6 @@ class SubjectListAdapter(private val subjectManager: SubjectManager) :
 
     interface SubjectManager {
         fun deleteSubject(subject: Subject)
+        fun editSubject(subject: Subject)
     }
 }

@@ -7,8 +7,8 @@ import android.view.ViewGroup
 import androidx.core.os.bundleOf
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.setFragmentResult
-import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.snackbar.Snackbar
@@ -17,12 +17,13 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.collect
 import me.brandom.schoolmanager.R
 import me.brandom.schoolmanager.databinding.FragmentSubjectFormBinding
+import me.brandom.schoolmanager.ui.subject.SubjectSharedViewModel
 
 @AndroidEntryPoint
 class SubjectFormFragment : Fragment() {
     private var _binding: FragmentSubjectFormBinding? = null
     private val binding get() = _binding!!
-    private val viewModel by viewModels<SubjectFormViewModel>()
+    private val viewModel: SubjectSharedViewModel by activityViewModels()
     private var subjectFormEventsJob: Job? = null
 
     override fun onCreateView(
@@ -38,6 +39,10 @@ class SubjectFormFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         binding.apply {
+            fragmentAddSubjectNameInput.editText?.setText(viewModel.subjectName)
+            fragmentAddSubjectLocationInput.editText?.setText(viewModel.subjectLocation)
+            fragmentAddSubjectTeacherInput.editText?.setText(viewModel.subjectTeacher)
+
             fragmentAddSubjectNameInput.editText?.addTextChangedListener {
                 viewModel.subjectName = it.toString()
             }
@@ -58,10 +63,10 @@ class SubjectFormFragment : Fragment() {
         subjectFormEventsJob = viewLifecycleOwner.lifecycleScope.launchWhenStarted {
             viewModel.subjectFormEvents.collect {
                 when (it) {
-                    is SubjectFormViewModel.SubjectFormEvents.InvalidInput ->
+                    is SubjectSharedViewModel.SubjectFormEvents.InvalidInput ->
                         Snackbar.make(view, R.string.error_missing_required, Snackbar.LENGTH_SHORT)
                             .show()
-                    is SubjectFormViewModel.SubjectFormEvents.ValidInput -> {
+                    is SubjectSharedViewModel.SubjectFormEvents.ValidInput -> {
                         setFragmentResult("subjectFormResult", bundleOf("result" to it.code))
                         findNavController().popBackStack()
                     }

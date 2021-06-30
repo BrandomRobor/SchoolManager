@@ -40,10 +40,6 @@
         <argument
             android:name="title"
             app:argType="string" />
-        <argument
-            android:name="subjectId"
-            android:defaultValue="0"
-            app:argType="integer" />
     </fragment>
     <dialog
         android:id="@+id/deleteSubjectDialogFragment"
