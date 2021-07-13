@@ -57,6 +57,7 @@ dependencies {
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.2")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.3.0")
+    androidTestImplementation("androidx.arch.core:core-testing:2.1.0")
 
     // Room database helper
     implementation("androidx.room:room-runtime:2.3.0")
@@ -69,6 +70,9 @@ dependencies {
 
     // Coroutines library
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.5.0")
+    androidTestImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.5.0") {
+        exclude("org.jetbrains.kotlinx", "kotlinx-coroutines-debug")
+    }
 
     // Lifecycle KTX extensions
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.3.1")
