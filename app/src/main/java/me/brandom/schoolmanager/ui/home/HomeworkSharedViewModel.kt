@@ -113,12 +113,12 @@ class HomeworkSharedViewModel @Inject constructor(
                 description = clearDescription
             )
             updateHomework(updatedHomework)
-            sendValidInputEvent(MainActivity.FORM_EDIT_OK_FLAG)
+            sendValidInputEvent(MainActivity.FORM_EDIT_OK_FLAG, updatedHomework)
         } ?: run {
             val newHomework =
                 Homework(homeworkName, homeworkDeadline, homeworkSubjectId, clearDescription)
             createHomework(newHomework)
-            sendValidInputEvent(MainActivity.FORM_CREATE_OK_FLAG)
+            sendValidInputEvent(MainActivity.FORM_CREATE_OK_FLAG, newHomework)
         }
         clearSavedState()
     }
@@ -127,8 +127,8 @@ class HomeworkSharedViewModel @Inject constructor(
         homeworkFormEventsChannel.send(HomeworkFormEvents.InvalidInput)
     }
 
-    private fun sendValidInputEvent(code: Int) = viewModelScope.launch {
-        homeworkFormEventsChannel.send(HomeworkFormEvents.ValidInput(code))
+    private fun sendValidInputEvent(code: Int, homework: Homework) = viewModelScope.launch {
+        homeworkFormEventsChannel.send(HomeworkFormEvents.ValidInput(code, homework))
     }
 
     private fun createHomework(homework: Homework) = viewModelScope.launch {
@@ -161,6 +161,6 @@ class HomeworkSharedViewModel @Inject constructor(
 
     sealed class HomeworkFormEvents {
         object InvalidInput : HomeworkFormEvents()
-        data class ValidInput(val code: Int) : HomeworkFormEvents()
+        data class ValidInput(val code: Int, val homework: Homework) : HomeworkFormEvents()
     }
 }
