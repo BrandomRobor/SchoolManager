@@ -1,9 +1,15 @@
 package me.brandom.schoolmanager.ui.home
 
+import android.app.AlarmManager
+import android.app.PendingIntent
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.app.AlarmManagerCompat
+import androidx.core.content.ContextCompat
+import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -17,6 +23,7 @@ import kotlinx.coroutines.flow.collect
 import me.brandom.schoolmanager.R
 import me.brandom.schoolmanager.database.entities.Homework
 import me.brandom.schoolmanager.databinding.FragmentHomeBinding
+import me.brandom.schoolmanager.receivers.HomeworkReminderReceiver
 import me.brandom.schoolmanager.ui.MainActivity
 
 @AndroidEntryPoint
@@ -80,6 +87,8 @@ class HomeFragment : Fragment(), HomeworkListAdapter.HomeworkManager {
         }
 
         setFragmentResultListener("formResult") { _, bundle ->
+            createAlarm(bundle.getParcelable("homework")!!)
+
             when (bundle.getInt("result")) {
                 MainActivity.FORM_CREATE_OK_FLAG ->
                     Snackbar.make(view, R.string.success_homework_created, Snackbar.LENGTH_SHORT)
@@ -105,6 +114,25 @@ class HomeFragment : Fragment(), HomeworkListAdapter.HomeworkManager {
         val action =
             HomeFragmentDirections.actionHomeFragmentToHomeworkFormFragment("Edit homework")
         findNavController().navigate(action)
+    }
+
+    private fun createAlarm(homework: Homework) {
+        val intent = Intent(requireContext(), HomeworkReminderReceiver::class.java)
+        intent.putExtra("bundle", bundleOf("homework" to homework))
+
+        val pendingIntent = PendingIntent.getBroadcast(
+            requireContext(),
+            homework.hwId,
+            intent,
+            PendingIntent.FLAG_CANCEL_CURRENT
+        )
+
+        AlarmManagerCompat.setExactAndAllowWhileIdle(
+            ContextCompat.getSystemService(requireContext(), AlarmManager::class.java)!!,
+            AlarmManager.RTC_WAKEUP,
+            homework.deadline,
+            pendingIntent
+        )
     }
 
     override fun onDestroyView() {

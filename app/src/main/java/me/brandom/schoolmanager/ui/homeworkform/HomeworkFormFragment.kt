@@ -148,7 +148,10 @@ class HomeworkFormFragment : Fragment() {
                             .show()
                     }
                     is HomeworkSharedViewModel.HomeworkFormEvents.ValidInput -> {
-                        setFragmentResult("formResult", bundleOf("result" to event.code))
+                        setFragmentResult(
+                            "formResult",
+                            bundleOf("result" to event.code, "homework" to event.homework)
+                        )
                         findNavController().popBackStack()
                     }
                 }
