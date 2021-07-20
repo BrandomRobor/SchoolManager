@@ -1,4 +1,4 @@
-package me.brandom.schoolmanager.ui.homeworkform
+package me.brandom.schoolmanager.ui.home.form
 
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog

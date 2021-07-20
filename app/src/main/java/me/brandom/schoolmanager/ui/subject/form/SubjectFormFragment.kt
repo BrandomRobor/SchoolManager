@@ -1,4 +1,4 @@
-package me.brandom.schoolmanager.ui.subjectform
+package me.brandom.schoolmanager.ui.subject.form
 
 import android.os.Bundle
 import android.view.LayoutInflater
