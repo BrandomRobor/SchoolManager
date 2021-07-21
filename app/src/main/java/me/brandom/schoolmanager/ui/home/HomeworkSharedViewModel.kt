@@ -120,7 +120,11 @@ class HomeworkSharedViewModel @Inject constructor(
             createHomework(newHomework)
             sendValidInputEvent(MainActivity.FORM_CREATE_OK_FLAG, newHomework)
         }
+    }
+
+    fun resetStates(homework: Homework? = null) {
         clearSavedState()
+        this.homework = homework
     }
 
     private fun sendInvalidInputEvent() = viewModelScope.launch {

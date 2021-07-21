@@ -72,7 +72,7 @@ class HomeFragment : Fragment(), HomeworkListAdapter.HomeworkManager {
             viewModel.homeworkEvents.collect {
                 when (it) {
                     is HomeworkSharedViewModel.HomeworkEvents.CanEnterForm -> {
-                        viewModel.homework = null
+                        viewModel.resetStates()
                         val action =
                             HomeFragmentDirections.actionHomeFragmentToHomeworkFormFragment(
                                 getString(R.string.title_create_homework)
@@ -110,7 +110,7 @@ class HomeFragment : Fragment(), HomeworkListAdapter.HomeworkManager {
     }
 
     override fun editHomework(homework: Homework) {
-        viewModel.homework = homework
+        viewModel.resetStates(homework)
         val action =
             HomeFragmentDirections.actionHomeFragmentToHomeworkFormFragment("Edit homework")
         findNavController().navigate(action)
