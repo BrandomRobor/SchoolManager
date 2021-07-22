@@ -10,8 +10,8 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import me.brandom.schoolmanager.R
+import me.brandom.schoolmanager.database.daos.HomeworkDao
 import me.brandom.schoolmanager.database.daos.SubjectDao
-import me.brandom.schoolmanager.database.entities.Homework
 import me.brandom.schoolmanager.utils.ApplicationScope
 import me.brandom.schoolmanager.utils.NotificationChannelIds
 import javax.inject.Inject
@@ -22,21 +22,24 @@ class HomeworkReminderReceiver : BroadcastReceiver() {
     lateinit var subjectDao: SubjectDao
 
     @Inject
+    lateinit var homeworkDao: HomeworkDao
+
+    @Inject
     @ApplicationScope
     lateinit var applicationScope: CoroutineScope
 
     override fun onReceive(context: Context, intent: Intent) {
-        val bundle = intent.getBundleExtra("bundle")!!
-        val homework = bundle.getParcelable<Homework>("homework")!!
+        val id = intent.getIntExtra("id", 0)
         val async = goAsync()
 
         applicationScope.launch {
-            val dbSubject = subjectDao.getSubjectById(homework.subjectId).first()
+            val homework = homeworkDao.getHomeworkById(id).first()
+            val subject = subjectDao.getSubjectById(homework.subjectId).first()
 
             val notification =
                 NotificationCompat.Builder(context, NotificationChannelIds.HOMEWORK_REMINDER)
                     .setContentTitle(homework.hwName)
-                    .setContentText(dbSubject.name)
+                    .setContentText(subject.name)
                     .setSmallIcon(R.drawable.ic_book)
                     .setPriority(NotificationCompat.PRIORITY_HIGH)
                     .build()

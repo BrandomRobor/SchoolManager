@@ -9,7 +9,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.app.AlarmManagerCompat
 import androidx.core.content.ContextCompat
-import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -87,7 +86,10 @@ class HomeFragment : Fragment(), HomeworkListAdapter.HomeworkManager {
         }
 
         setFragmentResultListener("formResult") { _, bundle ->
-            createAlarm(bundle.getParcelable("homework")!!)
+            createAlarm(
+                bundle.getInt("id", 0),
+                bundle.getLong("deadline", System.currentTimeMillis())
+            )
 
             when (bundle.getInt("result")) {
                 MainActivity.FORM_CREATE_OK_FLAG ->
@@ -116,13 +118,13 @@ class HomeFragment : Fragment(), HomeworkListAdapter.HomeworkManager {
         findNavController().navigate(action)
     }
 
-    private fun createAlarm(homework: Homework) {
+    private fun createAlarm(id: Int, deadline: Long) {
         val intent = Intent(requireContext(), HomeworkReminderReceiver::class.java)
-        intent.putExtra("bundle", bundleOf("homework" to homework))
+        intent.putExtra("id", id)
 
         val pendingIntent = PendingIntent.getBroadcast(
             requireContext(),
-            homework.hwId,
+            id,
             intent,
             PendingIntent.FLAG_CANCEL_CURRENT
         )
@@ -130,7 +132,7 @@ class HomeFragment : Fragment(), HomeworkListAdapter.HomeworkManager {
         AlarmManagerCompat.setExactAndAllowWhileIdle(
             ContextCompat.getSystemService(requireContext(), AlarmManager::class.java)!!,
             AlarmManager.RTC_WAKEUP,
-            homework.deadline,
+            deadline,
             pendingIntent
         )
     }
