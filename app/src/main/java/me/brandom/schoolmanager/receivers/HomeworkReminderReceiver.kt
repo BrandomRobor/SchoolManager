@@ -1,6 +1,5 @@
 package me.brandom.schoolmanager.receivers
 
-import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import androidx.core.app.NotificationCompat
@@ -8,16 +7,16 @@ import androidx.core.app.NotificationManagerCompat
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.launch
 import me.brandom.schoolmanager.R
 import me.brandom.schoolmanager.database.daos.HomeworkDao
 import me.brandom.schoolmanager.database.daos.SubjectDao
 import me.brandom.schoolmanager.utils.ApplicationScope
+import me.brandom.schoolmanager.utils.BroadcastReceiverExt
 import me.brandom.schoolmanager.utils.NotificationChannelIds
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class HomeworkReminderReceiver : BroadcastReceiver() {
+class HomeworkReminderReceiver : BroadcastReceiverExt() {
     @Inject
     lateinit var subjectDao: SubjectDao
 
@@ -30,9 +29,8 @@ class HomeworkReminderReceiver : BroadcastReceiver() {
 
     override fun onReceive(context: Context, intent: Intent) {
         val id = intent.getIntExtra("id", 0)
-        val async = goAsync()
 
-        applicationScope.launch {
+        goAsync(applicationScope) {
             val homework = homeworkDao.getHomeworkById(id).first()
             val subject = subjectDao.getSubjectById(homework.subjectId).first()
 
@@ -45,7 +43,6 @@ class HomeworkReminderReceiver : BroadcastReceiver() {
                     .build()
 
             NotificationManagerCompat.from(context).notify(homework.hwId, notification)
-            async.finish()
         }
     }
 }
