@@ -6,10 +6,8 @@ import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.flow.first
 import me.brandom.schoolmanager.R
 import me.brandom.schoolmanager.database.daos.HomeworkDao
-import me.brandom.schoolmanager.database.daos.SubjectDao
 import me.brandom.schoolmanager.utils.ApplicationScope
 import me.brandom.schoolmanager.utils.BroadcastReceiverExt
 import me.brandom.schoolmanager.utils.NotificationChannelIds
@@ -18,9 +16,6 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class HomeworkReminderReceiver : BroadcastReceiverExt() {
     @Inject
-    lateinit var subjectDao: SubjectDao
-
-    @Inject
     lateinit var homeworkDao: HomeworkDao
 
     @Inject
@@ -28,21 +23,19 @@ class HomeworkReminderReceiver : BroadcastReceiverExt() {
     lateinit var applicationScope: CoroutineScope
 
     override fun onReceive(context: Context, intent: Intent) {
-        val id = intent.getIntExtra("id", 0)
-
         goAsync(applicationScope) {
-            val homework = homeworkDao.getHomeworkById(id).first()
-            val subject = subjectDao.getSubjectById(homework.subjectId).first()
+            val hwWthSubject =
+                homeworkDao.getHomeworkWithSubjectByHwId(intent.getIntExtra("id", 0))
 
-            val notification =
+            NotificationManagerCompat.from(context).notify(
+                hwWthSubject.homework.hwId,
                 NotificationCompat.Builder(context, NotificationChannelIds.HOMEWORK_REMINDER)
-                    .setContentTitle(homework.hwName)
-                    .setContentText(subject.name)
+                    .setContentTitle(hwWthSubject.homework.hwName)
+                    .setContentText(hwWthSubject.subject.name)
                     .setSmallIcon(R.drawable.ic_book)
                     .setPriority(NotificationCompat.PRIORITY_HIGH)
                     .build()
-
-            NotificationManagerCompat.from(context).notify(homework.hwId, notification)
+            )
         }
     }
 }
