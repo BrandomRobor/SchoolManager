@@ -1,15 +1,43 @@
 package me.brandom.schoolmanager.ui.deletesubject
 
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
+import android.app.AlarmManager
+import android.app.Application
+import android.app.PendingIntent
+import android.content.Intent
+import androidx.core.content.ContextCompat
+import androidx.lifecycle.AndroidViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
+import me.brandom.schoolmanager.database.daos.HomeworkDao
 import me.brandom.schoolmanager.database.daos.SubjectDao
+import me.brandom.schoolmanager.receivers.HomeworkReminderReceiver
+import me.brandom.schoolmanager.utils.ApplicationScope
 import javax.inject.Inject
 
 @HiltViewModel
-class DeleteSubjectViewModel @Inject constructor(private val subjectDao: SubjectDao) : ViewModel() {
-    fun onConfirmDeleteClick(id: Int) = viewModelScope.launch {
+class DeleteSubjectViewModel @Inject constructor(
+    private val app: Application,
+    private val subjectDao: SubjectDao,
+    private val homeworkDao: HomeworkDao,
+    @ApplicationScope private val applicationScope: CoroutineScope
+) : AndroidViewModel(app) {
+    fun onConfirmDeleteClick(id: Int) = applicationScope.launch {
+        val alarmManager = ContextCompat.getSystemService(app, AlarmManager::class.java)!!
+        homeworkDao.getAllHomeworkIdsWithSubjectId(id).forEach {
+            val intent = Intent(app.applicationContext, HomeworkReminderReceiver::class.java)
+            intent.putExtra("id", it)
+
+            alarmManager.cancel(
+                PendingIntent.getBroadcast(
+                    app.applicationContext,
+                    it,
+                    intent,
+                    PendingIntent.FLAG_CANCEL_CURRENT
+                )
+            )
+        }
+
         subjectDao.deleteSubjectById(id)
     }
 }
