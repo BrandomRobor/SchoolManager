@@ -74,6 +74,17 @@ class SubjectSharedViewModel @Inject constructor(
         }
     }
 
+    fun resetState(subject: Subject? = null) {
+        this.subject = subject
+        clearState()
+    }
+
+    private fun clearState() {
+        state.keys().forEach {
+            state.remove<Any>(it)
+        }
+    }
+
     private fun createSubject(subject: Subject) = viewModelScope.launch {
         subjectDao.insertSubject(subject)
     }

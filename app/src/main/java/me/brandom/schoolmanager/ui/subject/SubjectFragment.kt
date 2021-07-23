@@ -56,6 +56,7 @@ class SubjectFragment : Fragment(), SubjectListAdapter.SubjectManager {
             }
 
             fragmentSubjectFab.setOnClickListener {
+                viewModel.resetState()
                 val action =
                     SubjectFragmentDirections.actionSubjectFragmentToSubjectFormFragment(getString(R.string.title_create_subject))
                 findNavController().navigate(action)
@@ -80,7 +81,7 @@ class SubjectFragment : Fragment(), SubjectListAdapter.SubjectManager {
     }
 
     override fun editSubject(subject: Subject) {
-        viewModel.subject = subject
+        viewModel.resetState(subject)
         val action =
             SubjectFragmentDirections.actionSubjectFragmentToSubjectFormFragment("Edit subject")
         findNavController().navigate(action)
