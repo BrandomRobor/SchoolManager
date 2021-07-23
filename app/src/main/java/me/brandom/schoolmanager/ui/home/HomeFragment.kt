@@ -103,6 +103,10 @@ class HomeFragment : Fragment(), HomeworkListAdapter.HomeworkManager {
     }
 
     override fun deleteHomework(homework: Homework) {
+        val alarmManager =
+            ContextCompat.getSystemService(requireContext(), AlarmManager::class.java)!!
+        alarmManager.cancel(createPendingIntent(homework.hwId))
+
         viewModel.deleteHomework(homework)
         Snackbar.make(requireView(), R.string.success_homework_deleted, Snackbar.LENGTH_LONG)
             .setAction(R.string.action_undo_delete) {
@@ -118,22 +122,24 @@ class HomeFragment : Fragment(), HomeworkListAdapter.HomeworkManager {
         findNavController().navigate(action)
     }
 
-    private fun createAlarm(id: Int, deadline: Long) {
+    private fun createPendingIntent(id: Int): PendingIntent {
         val intent = Intent(requireContext(), HomeworkReminderReceiver::class.java)
         intent.putExtra("id", id)
 
-        val pendingIntent = PendingIntent.getBroadcast(
+        return PendingIntent.getBroadcast(
             requireContext(),
             id,
             intent,
             PendingIntent.FLAG_CANCEL_CURRENT
         )
+    }
 
+    private fun createAlarm(id: Int, deadline: Long) {
         AlarmManagerCompat.setExactAndAllowWhileIdle(
             ContextCompat.getSystemService(requireContext(), AlarmManager::class.java)!!,
             AlarmManager.RTC_WAKEUP,
             deadline,
-            pendingIntent
+            createPendingIntent(id)
         )
     }
 
