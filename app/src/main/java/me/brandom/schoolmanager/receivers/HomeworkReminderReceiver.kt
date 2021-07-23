@@ -1,5 +1,6 @@
 package me.brandom.schoolmanager.receivers
 
+import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import androidx.core.app.NotificationCompat
@@ -9,12 +10,12 @@ import kotlinx.coroutines.CoroutineScope
 import me.brandom.schoolmanager.R
 import me.brandom.schoolmanager.database.daos.HomeworkDao
 import me.brandom.schoolmanager.utils.ApplicationScope
-import me.brandom.schoolmanager.utils.BroadcastReceiverExt
-import me.brandom.schoolmanager.utils.NotificationChannelIds
+import me.brandom.schoolmanager.utils.Constants
+import me.brandom.schoolmanager.utils.goAsync
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class HomeworkReminderReceiver : BroadcastReceiverExt() {
+class HomeworkReminderReceiver : BroadcastReceiver() {
     @Inject
     lateinit var homeworkDao: HomeworkDao
 
@@ -29,7 +30,7 @@ class HomeworkReminderReceiver : BroadcastReceiverExt() {
 
             NotificationManagerCompat.from(context).notify(
                 hwWthSubject.homework.hwId,
-                NotificationCompat.Builder(context, NotificationChannelIds.HOMEWORK_REMINDER)
+                NotificationCompat.Builder(context, Constants.HOMEWORK_REMINDER_CHANNEL_ID)
                     .setContentTitle(hwWthSubject.homework.hwName)
                     .setContentText(hwWthSubject.subject.name)
                     .setSmallIcon(R.drawable.ic_book)

@@ -4,14 +4,14 @@ import android.app.Application
 import androidx.core.app.NotificationChannelCompat
 import androidx.core.app.NotificationManagerCompat
 import dagger.hilt.android.HiltAndroidApp
-import me.brandom.schoolmanager.utils.NotificationChannelIds
+import me.brandom.schoolmanager.utils.Constants
 
 @HiltAndroidApp
 class SchoolManagerApplication : Application() {
     override fun onCreate() {
         super.onCreate()
         val reminderChannel = NotificationChannelCompat.Builder(
-            NotificationChannelIds.HOMEWORK_REMINDER,
+            Constants.HOMEWORK_REMINDER_CHANNEL_ID,
             NotificationManagerCompat.IMPORTANCE_HIGH
         )
             .setName("Homework reminders")
