@@ -93,6 +93,7 @@ class HomeworkFormFragment : Fragment() {
 
             fragmentAddHomeworkTimeInput.editText?.let {
                 it.setOnClickListener { _ ->
+                    val timeNotSet = viewModel.filledTime.isEmpty()
                     TimePickerDialog(
                         requireContext(),
                         { _, hourOfDay, minute ->
@@ -103,8 +104,8 @@ class HomeworkFormFragment : Fragment() {
                                     .format(homeworkDeadline.time)
                             )
                         },
-                        12,
-                        0,
+                        if (timeNotSet) 12 else homeworkDeadline.get(GregorianCalendar.HOUR_OF_DAY),
+                        if (timeNotSet) 0 else homeworkDeadline.get(GregorianCalendar.MINUTE),
                         android.text.format.DateFormat.is24HourFormat(requireContext())
                     ).show()
                 }
