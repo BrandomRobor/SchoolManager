@@ -19,6 +19,7 @@ import androidx.navigation.fragment.findNavController
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.textfield.MaterialAutoCompleteTextView
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.collect
 import me.brandom.schoolmanager.R
@@ -29,6 +30,7 @@ import java.text.DateFormat
 import java.util.GregorianCalendar
 
 @AndroidEntryPoint
+@ExperimentalCoroutinesApi
 class HomeworkFormFragment : Fragment() {
     private var _binding: FragmentHomeworkFormBinding? = null
     private val binding get() = _binding!!

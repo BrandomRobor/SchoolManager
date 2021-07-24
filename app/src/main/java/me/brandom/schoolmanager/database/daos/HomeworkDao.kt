@@ -8,6 +8,7 @@ import androidx.room.Update
 import kotlinx.coroutines.flow.Flow
 import me.brandom.schoolmanager.database.entities.Homework
 import me.brandom.schoolmanager.database.entities.HomeworkWithSubject
+import me.brandom.schoolmanager.utils.SortOrder
 
 @Dao
 interface HomeworkDao {
@@ -27,5 +28,13 @@ interface HomeworkDao {
     suspend fun getAllHomeworkIdsWithSubjectId(id: Int): List<Int>
 
     @Query("SELECT homework.*, subject.* from homework INNER JOIN subject ON homework.subjectId = subject.id ORDER BY homework.hwName")
-    fun getAllHomeworkWithSubject(): Flow<List<HomeworkWithSubject>>
+    fun getAllHomeworkWithSubjectByName(): Flow<List<HomeworkWithSubject>>
+
+    @Query("SELECT homework.*, subject.* from homework INNER JOIN subject ON homework.subjectId = subject.id ORDER BY homework.deadline")
+    fun getAllHomeworkWithSubjectByDeadline(): Flow<List<HomeworkWithSubject>>
+
+    fun getAllHomeworkWithSubject(sortOrder: SortOrder) = when (sortOrder) {
+        SortOrder.BY_NAME -> getAllHomeworkWithSubjectByName()
+        SortOrder.BY_DEADLINE -> getAllHomeworkWithSubjectByDeadline()
+    }
 }

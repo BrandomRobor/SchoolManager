@@ -4,12 +4,12 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
@@ -18,8 +18,10 @@ import me.brandom.schoolmanager.database.daos.SubjectDao
 import me.brandom.schoolmanager.database.entities.Homework
 import me.brandom.schoolmanager.database.entities.HomeworkWithSubject
 import me.brandom.schoolmanager.ui.MainActivity
+import me.brandom.schoolmanager.utils.SortOrder
 import javax.inject.Inject
 
+@ExperimentalCoroutinesApi
 @HiltViewModel
 class HomeworkSharedViewModel @Inject constructor(
     private val homeworkDao: HomeworkDao,
@@ -47,9 +49,16 @@ class HomeworkSharedViewModel @Inject constructor(
         get() = state.get<Int>("homeworkSubjectId") ?: homework?.subjectId ?: field
         set(value) = state.set("homeworkSubjectId", value)
 
-    private val _retrievalState =
-        MutableStateFlow<HomeworkRetrievalState>(HomeworkRetrievalState.Loading)
-    val retrievalState: StateFlow<HomeworkRetrievalState> = _retrievalState
+    val sortOrder = MutableStateFlow(SortOrder.BY_NAME)
+
+    private val homeworkListCustomized = sortOrder.flatMapLatest {
+        homeworkDao.getAllHomeworkWithSubject(it)
+    }
+    val homeworkList = homeworkListCustomized.stateIn(
+        viewModelScope,
+        SharingStarted.WhileSubscribed(),
+        emptyList()
+    )
 
     private val homeworkEventsChannel = Channel<HomeworkEvents>()
     val homeworkEvents = homeworkEventsChannel.receiveAsFlow()
@@ -59,14 +68,6 @@ class HomeworkSharedViewModel @Inject constructor(
 
     val subjectList =
         subjectDao.getAllSubjects().stateIn(viewModelScope, SharingStarted.Eagerly, emptyList())
-
-    init {
-        viewModelScope.launch {
-            homeworkDao.getAllHomeworkWithSubject().collect {
-                _retrievalState.value = HomeworkRetrievalState.Success(it)
-            }
-        }
-    }
 
     fun onUndoHomeworkClick(homework: Homework) = viewModelScope.launch {
         homeworkDao.insertHomework(homework)

@@ -17,8 +17,10 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
 import me.brandom.schoolmanager.R
 import me.brandom.schoolmanager.database.entities.Homework
 import me.brandom.schoolmanager.databinding.FragmentHomeBinding
@@ -26,6 +28,7 @@ import me.brandom.schoolmanager.receivers.HomeworkReminderReceiver
 import me.brandom.schoolmanager.ui.MainActivity
 
 @AndroidEntryPoint
+@ExperimentalCoroutinesApi
 class HomeFragment : Fragment(), HomeworkListAdapter.HomeworkManager {
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
@@ -50,15 +53,11 @@ class HomeFragment : Fragment(), HomeworkListAdapter.HomeworkManager {
             fragmentHomeRecyclerView.setHasFixedSize(true)
             fragmentHomeRecyclerView.adapter = adapter
 
-            retrievalStateJob = viewLifecycleOwner.lifecycleScope.launchWhenStarted {
-                viewModel.retrievalState.collect {
-                    fragmentHomeProgressBar.isVisible =
-                        it is HomeworkSharedViewModel.HomeworkRetrievalState.Loading
-                    fragmentHomeRecyclerView.isVisible =
-                        it is HomeworkSharedViewModel.HomeworkRetrievalState.Success && it.homeworkList.isNotEmpty()
-                    fragmentHomeNoItemsMessage.isVisible =
-                        it is HomeworkSharedViewModel.HomeworkRetrievalState.Success && it.homeworkList.isEmpty()
-                    adapter.submitList((it as? HomeworkSharedViewModel.HomeworkRetrievalState.Success)?.homeworkList)
+            retrievalStateJob = viewLifecycleOwner.lifecycleScope.launch {
+                viewModel.homeworkList.collect {
+                    fragmentHomeNoItemsMessage.isVisible = it.isEmpty()
+                    fragmentHomeRecyclerView.isVisible = it.isNotEmpty()
+                    adapter.submitList(it)
                 }
             }
 
