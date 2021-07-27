@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <ListPreference
+        android:entries="@array/settings_dark_theme_options"
+        android:entryValues="@array/settings_dark_theme_values"
+        android:key="dark_theme"
+        android:title="@string/settings_dark_theme_title"
+        app:useSimpleSummaryProvider="true" />
+</PreferenceScreen>

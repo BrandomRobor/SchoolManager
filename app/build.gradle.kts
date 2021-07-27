@@ -88,6 +88,12 @@ dependencies {
 
     // Fragment library
     implementation("androidx.fragment:fragment-ktx:1.3.5")
+
+    // Preferences library
+    implementation("androidx.preference:preference-ktx:1.1.1")
+
+    // DataStore (to save preferences)
+    implementation("androidx.datastore:datastore-preferences:1.0.0-rc02")
 }
 
 kapt {

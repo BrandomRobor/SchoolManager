@@ -2,14 +2,21 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     tools:showIn="navigation_view">
+    <group>
+        <item
+            android:id="@id/homeFragment"
+            android:icon="@drawable/ic_home"
+            android:title="@string/fragment_home_label" />
 
-    <item
-        android:id="@id/homeFragment"
-        android:icon="@drawable/ic_home"
-        android:title="@string/fragment_home_label" />
-
-    <item
-        android:id="@id/subjectFragment"
-        android:icon="@drawable/ic_book"
-        android:title="@string/fragment_subject_label" />
+        <item
+            android:id="@id/subjectFragment"
+            android:icon="@drawable/ic_book"
+            android:title="@string/fragment_subject_label" />
+    </group>
+    <group>
+        <item
+            android:id="@id/appSettingsFragment"
+            android:icon="@drawable/ic_settings"
+            android:title="@string/title_settings" />
+    </group>
 </menu>

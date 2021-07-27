@@ -52,4 +52,8 @@
     <action
         android:id="@+id/action_global_deleteSubjectDialogFragment"
         app:destination="@id/deleteSubjectDialogFragment" />
+    <fragment
+        android:id="@+id/appSettingsFragment"
+        android:name="me.brandom.schoolmanager.ui.settings.AppSettingsFragment"
+        android:label="@string/title_settings" />
 </navigation>

@@ -30,6 +30,19 @@
     <string name="options_sort_name_option_title">By name</string>
     <string name="options_sort_deadline_option_title">By date</string>
 
+    <string name="title_settings">Settings</string>
+    <string name="settings_dark_theme_title">Dark theme</string>
+    <string-array name="settings_dark_theme_options">
+        <item>Light</item>
+        <item>Dark</item>
+        <item>System default</item>
+    </string-array>
+    <string-array name="settings_dark_theme_values">
+        <item>1</item>
+        <item>2</item>
+        <item>-1</item>
+    </string-array>
+
     <!-- TODO Someday i'll change the id's of these strings. -->
 
     <string name="fragment_home_label">Home</string>
