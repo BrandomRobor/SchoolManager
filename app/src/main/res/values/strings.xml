@@ -26,6 +26,10 @@
 
     <string name="action_undo_delete">Undo</string>
 
+    <string name="options_sort_title">Sort by</string>
+    <string name="options_sort_name_option_title">By name</string>
+    <string name="options_sort_deadline_option_title">By date</string>
+
     <!-- TODO Someday i'll change the id's of these strings. -->
 
     <string name="fragment_home_label">Home</string>

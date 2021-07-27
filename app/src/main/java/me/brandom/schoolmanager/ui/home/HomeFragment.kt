@@ -5,6 +5,9 @@ import android.app.PendingIntent
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.app.AlarmManagerCompat
@@ -26,6 +29,7 @@ import me.brandom.schoolmanager.database.entities.Homework
 import me.brandom.schoolmanager.databinding.FragmentHomeBinding
 import me.brandom.schoolmanager.receivers.HomeworkReminderReceiver
 import me.brandom.schoolmanager.ui.MainActivity
+import me.brandom.schoolmanager.utils.SortOrder
 
 @AndroidEntryPoint
 @ExperimentalCoroutinesApi
@@ -48,6 +52,8 @@ class HomeFragment : Fragment(), HomeworkListAdapter.HomeworkManager {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val adapter = HomeworkListAdapter(this)
+
+        setHasOptionsMenu(true)
 
         binding.apply {
             fragmentHomeRecyclerView.setHasFixedSize(true)
@@ -99,6 +105,33 @@ class HomeFragment : Fragment(), HomeworkListAdapter.HomeworkManager {
                         .show()
             }
         }
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.fragment_home_options, menu)
+    }
+
+    override fun onPrepareOptionsMenu(menu: Menu) {
+        val sortOptionChecked = when (viewModel.currentSortOrder) {
+            SortOrder.BY_NAME -> R.id.options_sort_name_option
+            SortOrder.BY_DEADLINE -> R.id.options_sort_deadline_option
+        }
+
+        menu.findItem(sortOptionChecked).isChecked = true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean = when (item.itemId) {
+        R.id.options_sort_name_option -> {
+            viewModel.setSortOrder(SortOrder.BY_NAME)
+            item.isChecked = true
+            true
+        }
+        R.id.options_sort_deadline_option -> {
+            viewModel.setSortOrder(SortOrder.BY_DEADLINE)
+            item.isChecked = true
+            true
+        }
+        else -> super.onOptionsItemSelected(item)
     }
 
     override fun deleteHomework(homework: Homework) {

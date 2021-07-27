@@ -48,9 +48,10 @@ class HomeworkSharedViewModel @Inject constructor(
         get() = state.get<Int>("homeworkSubjectId") ?: homework?.subjectId ?: field
         set(value) = state.set("homeworkSubjectId", value)
 
-    val sortOrder = MutableStateFlow(SortOrder.BY_NAME)
+    private val sortOrderFlow = MutableStateFlow(SortOrder.BY_NAME)
+    val currentSortOrder = sortOrderFlow.value
 
-    private val homeworkListCustomized = sortOrder.flatMapLatest {
+    private val homeworkListCustomized = sortOrderFlow.flatMapLatest {
         homeworkDao.getAllHomeworkWithSubject(it)
     }
     val homeworkList = homeworkListCustomized.stateIn(
@@ -124,6 +125,10 @@ class HomeworkSharedViewModel @Inject constructor(
     fun resetStates(homework: Homework? = null) {
         clearSavedState()
         this.homework = homework
+    }
+
+    fun setSortOrder(sortOrder: SortOrder) = viewModelScope.launch {
+        sortOrderFlow.emit(sortOrder)
     }
 
     private fun sendInvalidInputEvent() = viewModelScope.launch {

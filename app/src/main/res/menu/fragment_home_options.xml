@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/options_sort"
+        android:icon="@drawable/ic_sort"
+        android:title="@string/options_sort_title"
+        app:iconTint="?attr/colorOnSurface"
+        app:showAsAction="ifRoom">
+        <menu>
+            <group android:checkableBehavior="single">
+                <item
+                    android:id="@+id/options_sort_name_option"
+                    android:title="@string/options_sort_name_option_title" />
+                <item
+                    android:id="@+id/options_sort_deadline_option"
+                    android:title="@string/options_sort_deadline_option_title" />
+            </group>
+        </menu>
+    </item>
+</menu>
