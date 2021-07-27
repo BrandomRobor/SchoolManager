@@ -6,6 +6,7 @@ import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.navArgs
 import dagger.hilt.android.AndroidEntryPoint
+import me.brandom.schoolmanager.R
 
 @AndroidEntryPoint
 class DeleteSubjectDialogFragment : DialogFragment() {
@@ -13,10 +14,10 @@ class DeleteSubjectDialogFragment : DialogFragment() {
     private val args: DeleteSubjectDialogFragmentArgs by navArgs()
 
     override fun onCreateDialog(savedInstanceState: Bundle?) = AlertDialog.Builder(requireContext())
-        .setTitle("Confirm deletion")
-        .setMessage("Deleting a subject will delete all homework of the subject. Do you want to continue?")
-        .setPositiveButton("No", null)
-        .setNegativeButton("Yes") { _, _ ->
+        .setTitle(R.string.confirm_subject_deletion_title)
+        .setMessage(R.string.confirm_subject_deletion_message)
+        .setPositiveButton(R.string.confirm_subject_deletion_negative, null)
+        .setNegativeButton(R.string.confirm_subject_deletion_positive) { _, _ ->
             viewModel.onConfirmDeleteClick(args.subjectId)
         }
         .create()

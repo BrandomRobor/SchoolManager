@@ -11,8 +11,18 @@
     <string name="success_subject_updated">Subject created successfully</string>
     <string name="success_subject_deleted">Subject deleted successfully</string>
 
+    <string name="confirm_subject_deletion_title">Are you sure?</string>
+    <string name="confirm_subject_deletion_message">
+        Deleting a subject also deletes all homework belonging to it, and this cannot be undone.
+        Do you want to continue?
+    </string>
+    <string name="confirm_subject_deletion_positive">Yes</string>
+    <string name="confirm_subject_deletion_negative">No</string>
+
     <string name="title_create_homework">Create homework</string>
+    <string name="title_edit_homework">Edit homework</string>
     <string name="title_create_subject">Create subject</string>
+    <string name="title_edit_subject">Edit subject</string>
 
     <string name="action_undo_delete">Undo</string>
 

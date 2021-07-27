@@ -83,7 +83,7 @@ class SubjectFragment : Fragment(), SubjectListAdapter.SubjectManager {
     override fun editSubject(subject: Subject) {
         viewModel.resetState(subject)
         val action =
-            SubjectFragmentDirections.actionSubjectFragmentToSubjectFormFragment("Edit subject")
+            SubjectFragmentDirections.actionSubjectFragmentToSubjectFormFragment(getString(R.string.title_edit_subject))
         findNavController().navigate(action)
     }
 

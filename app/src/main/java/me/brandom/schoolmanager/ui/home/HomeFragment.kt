@@ -117,7 +117,7 @@ class HomeFragment : Fragment(), HomeworkListAdapter.HomeworkManager {
     override fun editHomework(homework: Homework) {
         viewModel.resetStates(homework)
         val action =
-            HomeFragmentDirections.actionHomeFragmentToHomeworkFormFragment("Edit homework")
+            HomeFragmentDirections.actionHomeFragmentToHomeworkFormFragment(getString(R.string.title_edit_homework))
         findNavController().navigate(action)
     }
 
