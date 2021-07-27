@@ -84,7 +84,7 @@ dependencies {
     implementation("androidx.navigation:navigation-ui-ktx:2.3.5")
 
     // LeakCanary (to detect memory leaks)
-    debugImplementation("com.squareup.leakcanary:leakcanary-android:2.7")
+    //debugImplementation("com.squareup.leakcanary:leakcanary-android:2.7")
 
     // Fragment library
     implementation("androidx.fragment:fragment-ktx:1.3.5")
