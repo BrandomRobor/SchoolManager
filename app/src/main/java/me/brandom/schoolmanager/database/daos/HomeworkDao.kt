@@ -21,16 +21,28 @@ interface HomeworkDao {
     @Delete
     suspend fun deleteHomework(homework: Homework)
 
-    @Query("SELECT homework.*, subject.* FROM homework JOIN subject ON homework.subjectId = subject.id WHERE homework.hwId = :id")
+    @Query(
+        "SELECT homework.*, subject.* FROM homework " +
+                "INNER JOIN subject ON homework.subjectId = subject.id " +
+                "WHERE homework.hwId = :id"
+    )
     suspend fun getHomeworkWithSubjectByHwId(id: Int): HomeworkWithSubject
 
     @Query("SELECT hwId FROM homework WHERE subjectId = :id")
     suspend fun getAllHomeworkIdsWithSubjectId(id: Int): List<Int>
 
-    @Query("SELECT homework.*, subject.* from homework INNER JOIN subject ON homework.subjectId = subject.id ORDER BY homework.hwName")
+    @Query(
+        "SELECT homework.*, subject.* FROM homework " +
+                "INNER JOIN subject ON homework.subjectId = subject.id " +
+                "ORDER BY homework.hwName"
+    )
     fun getAllHomeworkWithSubjectByName(): Flow<List<HomeworkWithSubject>>
 
-    @Query("SELECT homework.*, subject.* from homework INNER JOIN subject ON homework.subjectId = subject.id ORDER BY homework.deadline")
+    @Query(
+        "SELECT homework.*, subject.* FROM homework " +
+                "INNER JOIN subject ON homework.subjectId = subject.id " +
+                "ORDER BY homework.deadline"
+    )
     fun getAllHomeworkWithSubjectByDeadline(): Flow<List<HomeworkWithSubject>>
 
     fun getAllHomeworkWithSubject(sortOrder: SortOrder) = when (sortOrder) {
