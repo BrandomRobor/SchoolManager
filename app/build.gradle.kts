@@ -52,7 +52,7 @@ android {
 dependencies {
     implementation("org.jetbrains.kotlin:kotlin-stdlib:1.5.21")
     implementation("androidx.core:core-ktx:1.6.0")
-    implementation("androidx.appcompat:appcompat:1.3.0")
+    implementation("androidx.appcompat:appcompat:1.3.1")
     implementation("com.google.android.material:material:1.4.0")
     implementation("androidx.constraintlayout:constraintlayout:2.0.4")
     testImplementation("junit:junit:4.13.2")
@@ -87,7 +87,7 @@ dependencies {
     //debugImplementation("com.squareup.leakcanary:leakcanary-android:2.7")
 
     // Fragment library
-    implementation("androidx.fragment:fragment-ktx:1.3.5")
+    implementation("androidx.fragment:fragment-ktx:1.3.6")
 
     // Preferences library
     implementation("androidx.preference:preference-ktx:1.1.1")
