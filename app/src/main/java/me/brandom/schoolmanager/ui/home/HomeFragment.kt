@@ -84,7 +84,13 @@ class HomeFragment : Fragment(), HomeworkListAdapter.HomeworkManager {
                         findNavController().navigate(action)
                     }
                     HomeworkSharedViewModel.HomeworkFormChecks.NO_SUBJECTS ->
-                        Snackbar.make(view, R.string.error_no_subjects, Snackbar.LENGTH_SHORT)
+                        Snackbar.make(view, R.string.error_no_subjects, Snackbar.LENGTH_LONG)
+                            .setAction(R.string.action_add_subject) {
+                                val action = HomeFragmentDirections.actionGlobalSubjectFormFragment(
+                                    getString(R.string.title_create_subject)
+                                )
+                                findNavController().navigate(action)
+                            }
                             .show()
                 }
             }

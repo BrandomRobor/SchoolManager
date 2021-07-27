@@ -56,4 +56,7 @@
         android:id="@+id/appSettingsFragment"
         android:name="me.brandom.schoolmanager.ui.settings.AppSettingsFragment"
         android:label="@string/title_settings" />
+    <action
+        android:id="@+id/action_global_subjectFormFragment"
+        app:destination="@id/subjectFormFragment" />
 </navigation>
