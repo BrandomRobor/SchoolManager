@@ -69,7 +69,7 @@ class HomeFragment : Fragment(), HomeworkListAdapter.HomeworkManager {
         homeworkEventsJob = viewLifecycleOwner.lifecycleScope.launchWhenStarted {
             viewModel.homeworkEvents.collect {
                 when (it) {
-                    is HomeworkSharedViewModel.HomeworkEvents.CanEnterForm -> {
+                    HomeworkSharedViewModel.HomeworkFormChecks.OK -> {
                         viewModel.resetStates()
                         val action =
                             HomeFragmentDirections.actionHomeFragmentToHomeworkFormFragment(
@@ -77,7 +77,7 @@ class HomeFragment : Fragment(), HomeworkListAdapter.HomeworkManager {
                             )
                         findNavController().navigate(action)
                     }
-                    is HomeworkSharedViewModel.HomeworkEvents.CannotEnterForm ->
+                    HomeworkSharedViewModel.HomeworkFormChecks.NO_SUBJECTS ->
                         Snackbar.make(view, R.string.error_no_subjects, Snackbar.LENGTH_SHORT)
                             .show()
                 }

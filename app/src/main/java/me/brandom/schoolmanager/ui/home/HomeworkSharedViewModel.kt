@@ -60,7 +60,7 @@ class HomeworkSharedViewModel @Inject constructor(
         emptyList()
     )
 
-    private val homeworkEventsChannel = Channel<HomeworkEvents>()
+    private val homeworkEventsChannel = Channel<HomeworkFormChecks>()
     val homeworkEvents = homeworkEventsChannel.receiveAsFlow()
 
     private val homeworkFormEventsChannel = Channel<HomeworkFormEvents>()
@@ -81,9 +81,9 @@ class HomeworkSharedViewModel @Inject constructor(
 
     fun onAddHomeworkClick() = viewModelScope.launch {
         if (subjectDao.getSubjectCount().first() > 0) {
-            homeworkEventsChannel.send(HomeworkEvents.CanEnterForm)
+            homeworkEventsChannel.send(HomeworkFormChecks.OK)
         } else {
-            homeworkEventsChannel.send(HomeworkEvents.CannotEnterForm)
+            homeworkEventsChannel.send(HomeworkFormChecks.NO_SUBJECTS)
         }
     }
 
@@ -159,9 +159,9 @@ class HomeworkSharedViewModel @Inject constructor(
         data class Success(val homeworkList: List<HomeworkWithSubject>) : HomeworkRetrievalState()
     }
 
-    sealed class HomeworkEvents {
-        object CanEnterForm : HomeworkEvents()
-        object CannotEnterForm : HomeworkEvents()
+    enum class HomeworkFormChecks {
+        OK,
+        NO_SUBJECTS
     }
 
     sealed class HomeworkFormEvents {
