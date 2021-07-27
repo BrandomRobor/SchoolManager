@@ -16,7 +16,6 @@ import kotlinx.coroutines.launch
 import me.brandom.schoolmanager.database.daos.HomeworkDao
 import me.brandom.schoolmanager.database.daos.SubjectDao
 import me.brandom.schoolmanager.database.entities.Homework
-import me.brandom.schoolmanager.database.entities.HomeworkWithSubject
 import me.brandom.schoolmanager.ui.MainActivity
 import me.brandom.schoolmanager.utils.SortOrder
 import javax.inject.Inject
@@ -152,11 +151,6 @@ class HomeworkSharedViewModel @Inject constructor(
         state.keys().forEach {
             state.remove<Any>(it)
         }
-    }
-
-    sealed class HomeworkRetrievalState {
-        object Loading : HomeworkRetrievalState()
-        data class Success(val homeworkList: List<HomeworkWithSubject>) : HomeworkRetrievalState()
     }
 
     enum class HomeworkFormChecks {
