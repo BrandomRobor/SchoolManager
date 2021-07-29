@@ -147,7 +147,7 @@ class HomeworkSharedViewModel @Inject constructor(
         )
     }
 
-    private fun updateHomework(homework: Homework) = viewModelScope.launch {
+    fun updateHomework(homework: Homework) = viewModelScope.launch {
         homeworkDao.updateHomework(homework)
     }
 

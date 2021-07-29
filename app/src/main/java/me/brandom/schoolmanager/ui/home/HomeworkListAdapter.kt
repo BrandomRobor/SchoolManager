@@ -60,6 +60,11 @@ class HomeworkListAdapter(val homeworkManager: HomeworkManager) :
                         false
                     }
                 }
+
+                itemHomeworkCheckBox.setOnCheckedChangeListener { _, isChecked ->
+                    val homework = getItem(adapterPosition).homework
+                    homeworkManager.markAsCompleted(homework, isChecked)
+                }
             }
         }
 
@@ -73,6 +78,8 @@ class HomeworkListAdapter(val homeworkManager: HomeworkManager) :
                 itemHomeworkDeadline.text = homework.formattedDateTime
 
                 itemHomeworkSubject.text = subject.name
+
+                itemHomeworkCheckBox.isChecked = homework.isComplete
             }
         }
     }
@@ -92,6 +99,7 @@ class HomeworkListAdapter(val homeworkManager: HomeworkManager) :
     }
 
     interface HomeworkManager {
+        fun markAsCompleted(homework: Homework, checkBoxState: Boolean)
         fun deleteHomework(homework: Homework)
         fun editHomework(homework: Homework)
     }

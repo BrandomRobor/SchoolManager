@@ -23,6 +23,7 @@ data class Homework(
     @ColumnInfo(index = true)
     val subjectId: Int,
     val description: String? = null,
+    val isComplete: Boolean = false,
     @PrimaryKey(autoGenerate = true)
     val hwId: Int = 0
 ) : Parcelable {

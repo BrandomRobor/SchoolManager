@@ -140,10 +140,18 @@ class HomeFragment : Fragment(), HomeworkListAdapter.HomeworkManager {
         else -> super.onOptionsItemSelected(item)
     }
 
+    override fun markAsCompleted(homework: Homework, checkBoxState: Boolean) {
+        viewModel.updateHomework(homework.copy(isComplete = checkBoxState))
+
+        if (checkBoxState) {
+            cancelAlarm(homework.hwId)
+        } else {
+            createAlarm(homework.hwId, homework.deadline)
+        }
+    }
+
     override fun deleteHomework(homework: Homework) {
-        val alarmManager =
-            ContextCompat.getSystemService(requireContext(), AlarmManager::class.java)!!
-        alarmManager.cancel(createPendingIntent(homework.hwId))
+        cancelAlarm(homework.hwId)
 
         viewModel.deleteHomework(homework)
         Snackbar.make(requireView(), R.string.success_homework_deleted, Snackbar.LENGTH_LONG)
@@ -179,6 +187,12 @@ class HomeFragment : Fragment(), HomeworkListAdapter.HomeworkManager {
             deadline,
             createPendingIntent(id)
         )
+    }
+
+    private fun cancelAlarm(id: Int) {
+        val alarmManager =
+            ContextCompat.getSystemService(requireContext(), AlarmManager::class.java)!!
+        alarmManager.cancel(createPendingIntent(id))
     }
 
     override fun onDestroyView() {
