@@ -181,12 +181,14 @@ class HomeFragment : Fragment(), HomeworkListAdapter.HomeworkManager {
     }
 
     private fun createAlarm(id: Int, deadline: Long) {
-        AlarmManagerCompat.setExactAndAllowWhileIdle(
-            ContextCompat.getSystemService(requireContext(), AlarmManager::class.java)!!,
-            AlarmManager.RTC_WAKEUP,
-            deadline,
-            createPendingIntent(id)
-        )
+        if (deadline > System.currentTimeMillis()) {
+            AlarmManagerCompat.setExactAndAllowWhileIdle(
+                ContextCompat.getSystemService(requireContext(), AlarmManager::class.java)!!,
+                AlarmManager.RTC_WAKEUP,
+                deadline,
+                createPendingIntent(id)
+            )
+        }
     }
 
     private fun cancelAlarm(id: Int) {
