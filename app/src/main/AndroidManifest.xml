@@ -20,6 +20,7 @@
             </intent-filter>
         </activity>
         <receiver android:name=".receivers.HomeworkReminderReceiver" />
+        <receiver android:name=".receivers.CompleteActionReceiver" />
     </application>
 
 </manifest>

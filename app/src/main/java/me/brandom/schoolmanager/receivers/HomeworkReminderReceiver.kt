@@ -1,5 +1,6 @@
 package me.brandom.schoolmanager.receivers
 
+import android.app.PendingIntent
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
@@ -25,8 +26,19 @@ class HomeworkReminderReceiver : BroadcastReceiver() {
 
     override fun onReceive(context: Context, intent: Intent) {
         goAsync(applicationScope) {
+            val homeworkId = intent.getIntExtra("id", 0)
+            val actionIntent = Intent(context, CompleteActionReceiver::class.java)
+            actionIntent.putExtra("id", homeworkId)
+
+            val pendingIntent = PendingIntent.getBroadcast(
+                context,
+                homeworkId,
+                actionIntent,
+                PendingIntent.FLAG_CANCEL_CURRENT
+            )
+
             val hwWthSubject =
-                homeworkDao.getHomeworkWithSubjectByHwId(intent.getIntExtra("id", 0))
+                homeworkDao.getHomeworkWithSubjectByHwId(homeworkId)
 
             NotificationManagerCompat.from(context).notify(
                 hwWthSubject.homework.hwId,
@@ -35,6 +47,7 @@ class HomeworkReminderReceiver : BroadcastReceiver() {
                     .setContentText(hwWthSubject.subject.name)
                     .setSmallIcon(R.drawable.ic_book)
                     .setPriority(NotificationCompat.PRIORITY_HIGH)
+                    .addAction(R.drawable.ic_done, "Mark as complete", pendingIntent)
                     .build()
             )
         }
