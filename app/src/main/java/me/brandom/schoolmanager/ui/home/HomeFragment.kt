@@ -21,6 +21,8 @@ import androidx.fragment.app.setFragmentResultListener
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.transition.MaterialElevationScale
 import dagger.hilt.android.AndroidEntryPoint
@@ -63,6 +65,12 @@ class HomeFragment : Fragment(), HomeworkListAdapter.HomeworkManager {
 
         binding.apply {
             ViewGroupCompat.setTransitionGroup(fragmentHomeRecyclerView, true)
+            fragmentHomeRecyclerView.addItemDecoration(
+                DividerItemDecoration(
+                    fragmentHomeRecyclerView.context,
+                    (fragmentHomeRecyclerView.layoutManager as LinearLayoutManager).orientation
+                )
+            )
             fragmentHomeRecyclerView.setHasFixedSize(true)
             fragmentHomeRecyclerView.adapter = adapter
 
