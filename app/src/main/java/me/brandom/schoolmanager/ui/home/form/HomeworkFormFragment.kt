@@ -2,14 +2,17 @@ package me.brandom.schoolmanager.ui.home.form
 
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
+import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
+import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import androidx.core.os.bundleOf
+import androidx.core.view.ViewCompat
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -18,6 +21,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.textfield.MaterialAutoCompleteTextView
+import com.google.android.material.transition.MaterialContainerTransform
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.Job
@@ -38,6 +42,18 @@ class HomeworkFormFragment : Fragment() {
     private var subjectListJob: Job? = null
     private var homeworkFormEventsJob: Job? = null
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        sharedElementEnterTransition = MaterialContainerTransform().apply {
+            val ty = TypedValue()
+            requireContext().theme.resolveAttribute(R.attr.colorSurface, ty, true)
+
+            duration = resources.getInteger(R.integer.material_motion_duration_long_1).toLong()
+            scrimColor = Color.TRANSPARENT
+            setAllContainerColors(ty.data)
+        }
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -49,6 +65,7 @@ class HomeworkFormFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        ViewCompat.setTransitionName(binding.root, "homework_transition")
 
         val homeworkDeadline = GregorianCalendar()
         homeworkDeadline.timeInMillis = viewModel.homeworkDeadline

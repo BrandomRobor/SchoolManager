@@ -12,13 +12,17 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.app.AlarmManagerCompat
 import androidx.core.content.ContextCompat
+import androidx.core.view.ViewGroupCompat
+import androidx.core.view.doOnPreDraw
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.setFragmentResultListener
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.snackbar.Snackbar
+import com.google.android.material.transition.MaterialElevationScale
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.Job
@@ -51,11 +55,14 @@ class HomeFragment : Fragment(), HomeworkListAdapter.HomeworkManager {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        postponeEnterTransition()
+        view.doOnPreDraw { startPostponedEnterTransition() }
         val adapter = HomeworkListAdapter(this)
 
         setHasOptionsMenu(true)
 
         binding.apply {
+            ViewGroupCompat.setTransitionGroup(fragmentHomeRecyclerView, true)
             fragmentHomeRecyclerView.setHasFixedSize(true)
             fragmentHomeRecyclerView.adapter = adapter
 
@@ -138,6 +145,19 @@ class HomeFragment : Fragment(), HomeworkListAdapter.HomeworkManager {
             true
         }
         else -> super.onOptionsItemSelected(item)
+    }
+
+    override fun onHomeworkClick(rootView: View) {
+        exitTransition = MaterialElevationScale(false).apply {
+            duration = resources.getInteger(R.integer.material_motion_duration_long_1).toLong()
+        }
+        reenterTransition = MaterialElevationScale(true).apply {
+            duration = resources.getInteger(R.integer.material_motion_duration_long_1).toLong()
+        }
+
+        val extras = FragmentNavigatorExtras(rootView to "homework_transition")
+        val action = HomeFragmentDirections.actionHomeFragmentToHomeworkFormFragment("Testing")
+        findNavController().navigate(action, extras)
     }
 
     override fun markAsCompleted(homework: Homework, checkBoxState: Boolean) {

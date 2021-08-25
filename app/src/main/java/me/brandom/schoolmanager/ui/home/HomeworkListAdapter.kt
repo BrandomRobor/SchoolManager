@@ -1,7 +1,9 @@
 package me.brandom.schoolmanager.ui.home
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.ViewCompat
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -36,11 +38,16 @@ class HomeworkListAdapter(val homeworkManager: HomeworkManager) :
                     val homework = getItem(adapterPosition).homework
                     homeworkManager.markAsCompleted(homework, isChecked)
                 }
+
+                root.setOnClickListener {
+                    homeworkManager.onHomeworkClick(it)
+                }
             }
         }
 
         fun bind(homework: Homework, subject: Subject) {
             binding.apply {
+                ViewCompat.setTransitionName(root, "homework_transition_${homework.hwId}")
                 itemHomeworkName.text = homework.hwName
                 itemHomeworkDeadline.text = homework.formattedDateTime
                 itemHomeworkSubject.text = subject.name
@@ -64,6 +71,7 @@ class HomeworkListAdapter(val homeworkManager: HomeworkManager) :
     }
 
     interface HomeworkManager {
+        fun onHomeworkClick(rootView: View)
         fun markAsCompleted(homework: Homework, checkBoxState: Boolean)
         fun deleteHomework(homework: Homework)
         fun editHomework(homework: Homework)
