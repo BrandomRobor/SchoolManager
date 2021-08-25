@@ -67,8 +67,8 @@ dependencies {
     kapt("androidx.room:room-compiler:2.3.0")
 
     // Dagger Hilt (dependency injection helper)
-    implementation("com.google.dagger:hilt-android:2.37")
-    kapt("com.google.dagger:hilt-compiler:2.37")
+    implementation("com.google.dagger:hilt-android:2.38.1")
+    kapt("com.google.dagger:hilt-compiler:2.38.1")
 
     // Coroutines library
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.5.1")
@@ -98,8 +98,5 @@ dependencies {
 }
 
 kapt {
-    javacOptions {
-        option("-Adagger.fastInit=enabled")
-    }
     correctErrorTypes = true
 }
