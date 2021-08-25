@@ -5,7 +5,7 @@
         android:id="@+id/options_sort"
         android:icon="@drawable/ic_sort"
         android:title="@string/options_sort_title"
-        app:iconTint="?attr/colorOnSurface"
+        app:iconTint="?attr/colorOnPrimarySurface"
         app:showAsAction="ifRoom">
         <menu>
             <group android:checkableBehavior="single">
