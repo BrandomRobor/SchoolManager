@@ -47,7 +47,10 @@ class HomeworkListAdapter(val homeworkManager: HomeworkManager) :
 
         fun bind(homework: Homework, subject: Subject) {
             binding.apply {
-                ViewCompat.setTransitionName(root, "homework_transition_${homework.hwId}")
+                ViewCompat.setTransitionName(
+                    root,
+                    "homework_to_details_transition_${homework.hwId}"
+                )
                 itemHomeworkName.text = homework.hwName
                 itemHomeworkDeadline.text = homework.formattedDateTime
                 itemHomeworkSubject.text = subject.name

@@ -165,8 +165,8 @@ class HomeFragment : Fragment(), HomeworkListAdapter.HomeworkManager {
         }
 
         viewModel.resetStates(hwWthSubject.homework, hwWthSubject.subject)
-        val extras = FragmentNavigatorExtras(rootView to "homework_transition")
-        val action = HomeFragmentDirections.actionHomeFragmentToHomeworkFormFragment("Testing")
+        val extras = FragmentNavigatorExtras(rootView to "homework_to_details_transition")
+        val action = HomeFragmentDirections.actionHomeFragmentToHomeworkDetailsFragment()
         findNavController().navigate(action, extras)
     }
 

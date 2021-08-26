@@ -13,6 +13,9 @@
         <action
             android:id="@+id/action_homeFragment_to_homeworkFormFragment"
             app:destination="@id/homeworkFormFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_homeworkDetailsFragment"
+            app:destination="@id/homeworkDetailsFragment" />
     </fragment>
     <fragment
         android:id="@+id/subjectFragment"
@@ -59,4 +62,13 @@
     <action
         android:id="@+id/action_global_subjectFormFragment"
         app:destination="@id/subjectFormFragment" />
+    <fragment
+        android:id="@+id/homeworkDetailsFragment"
+        android:name="me.brandom.schoolmanager.ui.home.details.HomeworkDetailsFragment"
+        android:label="fragment_homework_details"
+        tools:layout="@layout/fragment_homework_details">
+        <action
+            android:id="@+id/action_homeworkDetailsFragment_to_homeworkFormFragment"
+            app:destination="@id/homeworkFormFragment" />
+    </fragment>
 </navigation>
