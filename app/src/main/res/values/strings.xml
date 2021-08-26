@@ -31,6 +31,9 @@
     <string name="options_sort_name_option_title">By name</string>
     <string name="options_sort_deadline_option_title">By date</string>
 
+    <string name="details_deadline_subtitle">Deadline</string>
+    <string name="details_subject_subtitle">Subject</string>
+
     <string name="title_settings">Settings</string>
     <string name="settings_dark_theme_title">Dark theme</string>
     <string-array name="settings_dark_theme_options">
