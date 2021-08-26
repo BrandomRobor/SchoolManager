@@ -65,7 +65,7 @@ class HomeworkFormFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        ViewCompat.setTransitionName(binding.root, "homework_transition")
+        ViewCompat.setTransitionName(binding.root, "fab_to_form_transition")
 
         val homeworkDeadline = GregorianCalendar()
         homeworkDeadline.timeInMillis = viewModel.homeworkDeadline

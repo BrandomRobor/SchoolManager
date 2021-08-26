@@ -12,6 +12,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.app.AlarmManagerCompat
 import androidx.core.content.ContextCompat
+import androidx.core.view.ViewCompat
 import androidx.core.view.ViewGroupCompat
 import androidx.core.view.doOnPreDraw
 import androidx.core.view.isVisible
@@ -66,6 +67,8 @@ class HomeFragment : Fragment(), HomeworkListAdapter.HomeworkManager {
 
         binding.apply {
             ViewGroupCompat.setTransitionGroup(fragmentHomeRecyclerView, true)
+            ViewCompat.setTransitionName(fragmentHomeAddFab, "fab_to_form_transition")
+
             fragmentHomeRecyclerView.addItemDecoration(
                 DividerItemDecoration(
                     fragmentHomeRecyclerView.context,
@@ -93,11 +96,13 @@ class HomeFragment : Fragment(), HomeworkListAdapter.HomeworkManager {
                 when (it) {
                     HomeworkSharedViewModel.HomeworkFormChecks.OK -> {
                         viewModel.resetStates()
+                        val extras =
+                            FragmentNavigatorExtras(binding.fragmentHomeAddFab to "fab_to_form_transition")
                         val action =
                             HomeFragmentDirections.actionHomeFragmentToHomeworkFormFragment(
                                 getString(R.string.title_create_homework)
                             )
-                        findNavController().navigate(action)
+                        findNavController().navigate(action, extras)
                     }
                     HomeworkSharedViewModel.HomeworkFormChecks.NO_SUBJECTS ->
                         Snackbar.make(view, R.string.error_no_subjects, Snackbar.LENGTH_LONG)
