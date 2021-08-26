@@ -16,6 +16,7 @@ import kotlinx.coroutines.launch
 import me.brandom.schoolmanager.database.daos.HomeworkDao
 import me.brandom.schoolmanager.database.daos.SubjectDao
 import me.brandom.schoolmanager.database.entities.Homework
+import me.brandom.schoolmanager.database.entities.Subject
 import me.brandom.schoolmanager.ui.MainActivity
 import me.brandom.schoolmanager.utils.SortOrder
 import javax.inject.Inject
@@ -28,6 +29,7 @@ class HomeworkSharedViewModel @Inject constructor(
     private val state: SavedStateHandle
 ) : ViewModel() {
     var homework: Homework? = null
+    lateinit var subject: Subject
 
     var homeworkName = ""
         get() = state.get<String>("homeworkName") ?: homework?.hwName ?: field
@@ -125,6 +127,12 @@ class HomeworkSharedViewModel @Inject constructor(
     fun resetStates(homework: Homework? = null) {
         clearSavedState()
         this.homework = homework
+    }
+
+    fun resetStates(homework: Homework? = null, subject: Subject) {
+        clearSavedState()
+        this.homework = homework
+        this.subject = subject
     }
 
     fun setSortOrder(sortOrder: SortOrder) = viewModelScope.launch {

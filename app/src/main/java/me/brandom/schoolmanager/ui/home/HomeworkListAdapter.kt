@@ -40,7 +40,7 @@ class HomeworkListAdapter(val homeworkManager: HomeworkManager) :
                 }
 
                 root.setOnClickListener {
-                    homeworkManager.onHomeworkClick(it)
+                    homeworkManager.onHomeworkClick(it, getItem(adapterPosition))
                 }
             }
         }
@@ -71,7 +71,7 @@ class HomeworkListAdapter(val homeworkManager: HomeworkManager) :
     }
 
     interface HomeworkManager {
-        fun onHomeworkClick(rootView: View)
+        fun onHomeworkClick(rootView: View, hwWthSubject: HomeworkWithSubject)
         fun markAsCompleted(homework: Homework, checkBoxState: Boolean)
         fun deleteHomework(homework: Homework)
         fun editHomework(homework: Homework)

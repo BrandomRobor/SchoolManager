@@ -32,6 +32,7 @@ import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import me.brandom.schoolmanager.R
 import me.brandom.schoolmanager.database.entities.Homework
+import me.brandom.schoolmanager.database.entities.HomeworkWithSubject
 import me.brandom.schoolmanager.databinding.FragmentHomeBinding
 import me.brandom.schoolmanager.receivers.HomeworkReminderReceiver
 import me.brandom.schoolmanager.ui.MainActivity
@@ -155,7 +156,7 @@ class HomeFragment : Fragment(), HomeworkListAdapter.HomeworkManager {
         else -> super.onOptionsItemSelected(item)
     }
 
-    override fun onHomeworkClick(rootView: View) {
+    override fun onHomeworkClick(rootView: View, hwWthSubject: HomeworkWithSubject) {
         exitTransition = MaterialElevationScale(false).apply {
             duration = resources.getInteger(R.integer.material_motion_duration_long_1).toLong()
         }
@@ -163,6 +164,7 @@ class HomeFragment : Fragment(), HomeworkListAdapter.HomeworkManager {
             duration = resources.getInteger(R.integer.material_motion_duration_long_1).toLong()
         }
 
+        viewModel.resetStates(hwWthSubject.homework, hwWthSubject.subject)
         val extras = FragmentNavigatorExtras(rootView to "homework_transition")
         val action = HomeFragmentDirections.actionHomeFragmentToHomeworkFormFragment("Testing")
         findNavController().navigate(action, extras)
