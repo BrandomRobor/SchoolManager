@@ -3,9 +3,7 @@ package me.brandom.schoolmanager.ui.home.details
 import android.graphics.Color
 import android.os.Bundle
 import android.util.TypedValue
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import androidx.core.view.ViewCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
@@ -47,6 +45,7 @@ class HomeworkDetailsFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        setHasOptionsMenu(true)
         ViewCompat.setTransitionName(binding.root, "homework_to_details_transition")
 
         binding.apply {
@@ -56,6 +55,10 @@ class HomeworkDetailsFragment : Fragment() {
             homeworkDetailsDeadline.text = viewModel.homework!!.formattedDateTime
             homeworkDetailsSubject.text = viewModel.subject.name
         }
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.homework_menu, menu)
     }
 
     override fun onDestroyView() {
