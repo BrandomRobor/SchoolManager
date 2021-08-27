@@ -8,6 +8,7 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.navigation.fragment.findNavController
 import com.google.android.material.transition.MaterialContainerTransform
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -59,6 +60,22 @@ class HomeworkDetailsFragment : Fragment() {
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.homework_menu, menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem) = when (item.itemId) {
+        R.id.homework_edit_item -> {
+            findNavController().navigate(
+                HomeworkDetailsFragmentDirections.actionHomeworkDetailsFragmentToHomeworkFormFragment(
+                    getString(R.string.title_edit_homework)
+                )
+            )
+            true
+        }
+        R.id.homework_delete_item -> {
+            viewModel.deleteHomework(viewModel.homework!!)
+            findNavController().popBackStack()
+        }
+        else -> super.onOptionsItemSelected(item)
     }
 
     override fun onDestroyView() {
