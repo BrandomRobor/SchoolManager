@@ -65,7 +65,7 @@
     <fragment
         android:id="@+id/homeworkDetailsFragment"
         android:name="me.brandom.schoolmanager.ui.home.details.HomeworkDetailsFragment"
-        android:label="fragment_homework_details"
+        android:label="@string/title_details_fragment"
         tools:layout="@layout/fragment_homework_details">
         <action
             android:id="@+id/action_homeworkDetailsFragment_to_homeworkFormFragment"
