@@ -4,12 +4,7 @@ import android.app.AlarmManager
 import android.app.PendingIntent
 import android.content.Intent
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.Menu
-import android.view.MenuInflater
-import android.view.MenuItem
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import androidx.core.app.AlarmManagerCompat
 import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
@@ -37,7 +32,9 @@ import me.brandom.schoolmanager.database.entities.HomeworkWithSubject
 import me.brandom.schoolmanager.databinding.FragmentHomeBinding
 import me.brandom.schoolmanager.receivers.HomeworkReminderReceiver
 import me.brandom.schoolmanager.ui.MainActivity
+import me.brandom.schoolmanager.utils.NotificationTimeHelper
 import me.brandom.schoolmanager.utils.SortOrder
+import javax.inject.Inject
 
 @AndroidEntryPoint
 @ExperimentalCoroutinesApi
@@ -47,6 +44,9 @@ class HomeFragment : Fragment(), HomeworkListAdapter.HomeworkManager {
     private val viewModel: HomeworkSharedViewModel by activityViewModels()
     private var homeworkEventsJob: Job? = null
     private var retrievalStateJob: Job? = null
+
+    @Inject
+    lateinit var notificationTimeHelper: NotificationTimeHelper
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -220,7 +220,7 @@ class HomeFragment : Fragment(), HomeworkListAdapter.HomeworkManager {
             AlarmManagerCompat.setExactAndAllowWhileIdle(
                 ContextCompat.getSystemService(requireContext(), AlarmManager::class.java)!!,
                 AlarmManager.RTC_WAKEUP,
-                deadline,
+                notificationTimeHelper.getInitialNotificationTime(deadline),
                 createPendingIntent(id)
             )
         }
