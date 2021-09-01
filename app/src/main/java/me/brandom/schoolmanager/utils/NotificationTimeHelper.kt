@@ -11,4 +11,8 @@ class NotificationTimeHelper @Inject constructor() {
     private val tempArray = arrayOf(259200000, 86400000L)
 
     fun getInitialNotificationTime(deadline: Long) = deadline - tempArray[0]
+
+    fun getNextNotificationTime(deadline: Long) =
+        deadline - (tempArray.find { (deadline - System.currentTimeMillis()) > it }
+            ?: 0)
 }
