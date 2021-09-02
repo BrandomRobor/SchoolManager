@@ -3,11 +3,15 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="app/src/main/res/drawable/ic_access_time.xml" value="0.21458333333333332" />
+        <entry key="app/src/main/res/drawable/ic_calendar_today.xml" value="0.21458333333333332" />
         <entry key="app/src/main/res/drawable/ic_create.xml" value="0.21458333333333332" />
         <entry key="app/src/main/res/drawable/ic_delete.xml" value="0.21458333333333332" />
+        <entry key="app/src/main/res/drawable/ic_format_align_left.xml" value="0.21458333333333332" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.1984375" />
         <entry key="app/src/main/res/layout/fragment_home.xml" value="0.1816123188405797" />
         <entry key="app/src/main/res/layout/fragment_homework_details.xml" value="0.33" />
+        <entry key="app/src/main/res/layout/fragment_homework_form.xml" value="0.33" />
         <entry key="app/src/main/res/layout/fragment_subject.xml" value="0.18" />
         <entry key="app/src/main/res/layout/item_homework.xml" value="0.4351851851851852" />
         <entry key="app/src/main/res/menu/fragment_home_options.xml" value="0.1984375" />
