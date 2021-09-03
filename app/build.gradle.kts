@@ -95,6 +95,9 @@ dependencies {
 
     // DataStore (to save preferences)
     implementation("androidx.datastore:datastore-preferences:1.0.0")
+
+    // RecyclerView selection
+    implementation("androidx.recyclerview:recyclerview-selection:1.1.0")
 }
 
 kapt {

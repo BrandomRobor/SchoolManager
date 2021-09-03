@@ -17,6 +17,10 @@ import androidx.fragment.app.setFragmentResultListener
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.selection.SelectionPredicates
+import androidx.recyclerview.selection.SelectionTracker
+import androidx.recyclerview.selection.StableIdKeyProvider
+import androidx.recyclerview.selection.StorageStrategy
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.snackbar.Snackbar
@@ -77,6 +81,15 @@ class HomeFragment : Fragment(), HomeworkListAdapter.HomeworkManager {
             )
             fragmentHomeRecyclerView.setHasFixedSize(true)
             fragmentHomeRecyclerView.adapter = adapter
+
+            val tracker = SelectionTracker.Builder(
+                "homework_selection",
+                fragmentHomeRecyclerView,
+                StableIdKeyProvider(fragmentHomeRecyclerView),
+                HomeworkDetailsLookup(fragmentHomeRecyclerView),
+                StorageStrategy.createLongStorage()
+            ).withSelectionPredicate(SelectionPredicates.createSelectAnything()).build()
+            adapter.tracker = tracker
 
             retrievalStateJob = viewLifecycleOwner.lifecycleScope.launch {
                 viewModel.homeworkList.collect {

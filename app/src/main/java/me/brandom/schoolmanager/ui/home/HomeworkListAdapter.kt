@@ -4,6 +4,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.ViewCompat
+import androidx.recyclerview.selection.ItemDetailsLookup
+import androidx.recyclerview.selection.SelectionTracker
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -30,6 +32,12 @@ class HomeworkListAdapter(val homeworkManager: HomeworkManager) :
         }
     }
 
+    init {
+        setHasStableIds(true)
+    }
+
+    var tracker: SelectionTracker<Long>? = null
+
     inner class HomeworkListViewHolder(private val binding: ItemHomeworkBinding) :
         RecyclerView.ViewHolder(binding.root) {
         init {
@@ -45,7 +53,7 @@ class HomeworkListAdapter(val homeworkManager: HomeworkManager) :
             }
         }
 
-        fun bind(homework: Homework, subject: Subject) {
+        fun bind(homework: Homework, subject: Subject, isSelected: Boolean) {
             binding.apply {
                 ViewCompat.setTransitionName(
                     root,
@@ -55,7 +63,13 @@ class HomeworkListAdapter(val homeworkManager: HomeworkManager) :
                 itemHomeworkDeadline.text = homework.formattedDateTime
                 itemHomeworkSubject.text = subject.name
                 itemHomeworkCheckBox.isChecked = homework.isComplete
+                itemHomeworkName.paint.isStrikeThruText = isSelected
             }
+        }
+
+        fun getItemDetails() = object : ItemDetailsLookup.ItemDetails<Long>() {
+            override fun getPosition() = adapterPosition
+            override fun getSelectionKey() = getItem(adapterPosition).homework.hwId.toLong()
         }
     }
 
@@ -70,8 +84,16 @@ class HomeworkListAdapter(val homeworkManager: HomeworkManager) :
 
     override fun onBindViewHolder(holder: HomeworkListViewHolder, position: Int) {
         val currentItem = getItem(position)
-        holder.bind(currentItem.homework, currentItem.subject)
+        tracker?.let {
+            holder.bind(
+                currentItem.homework,
+                currentItem.subject,
+                it.isSelected(currentItem.homework.hwId.toLong())
+            )
+        }
     }
+
+    override fun getItemId(position: Int) = getItem(position).homework.hwId.toLong()
 
     interface HomeworkManager {
         fun onHomeworkClick(rootView: View, hwWthSubject: HomeworkWithSubject)
