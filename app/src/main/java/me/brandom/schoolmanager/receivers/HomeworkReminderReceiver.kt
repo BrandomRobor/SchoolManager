@@ -5,6 +5,7 @@ import android.app.PendingIntent
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
+import android.os.Build
 import androidx.core.app.AlarmManagerCompat
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
@@ -52,7 +53,7 @@ class HomeworkReminderReceiver : BroadcastReceiver() {
                             context,
                             homeworkId,
                             actionIntent,
-                            PendingIntent.FLAG_CANCEL_CURRENT
+                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_CANCEL_CURRENT else PendingIntent.FLAG_CANCEL_CURRENT
                         )
                     )
                     .build()
@@ -73,7 +74,7 @@ class HomeworkReminderReceiver : BroadcastReceiver() {
                         context,
                         homeworkId,
                         nextReminderIntent,
-                        PendingIntent.FLAG_CANCEL_CURRENT
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_CANCEL_CURRENT else PendingIntent.FLAG_CANCEL_CURRENT
                     )
                 )
             }
