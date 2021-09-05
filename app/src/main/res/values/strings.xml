@@ -24,7 +24,10 @@
     <string name="title_create_subject">Create subject</string>
     <string name="title_edit_subject">Edit subject</string>
     <string name="title_details_fragment">Details</string>
-    <string name="title_items_selected">%d item%s selected</string>
+    <plurals name="title_items_selected">
+        <item quantity="one">%d item selected</item>
+        <item quantity="other">%d items selected</item>
+    </plurals>
 
     <string name="action_undo_delete">Undo</string>
     <string name="action_add_subject">Add subject</string>

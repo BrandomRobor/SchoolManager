@@ -101,11 +101,10 @@ class HomeFragment : Fragment(), HomeworkListAdapter.HomeworkManager, ActionMode
                             if (tracker.hasSelection()) requireActivity().startActionMode(this@HomeFragment) else null
                     } else {
                         if (!tracker.hasSelection()) actionMode!!.finish()
-                        actionMode?.title = getString(
-                            R.string.title_items_selected,
+                        actionMode?.title = resources.getQuantityString(
+                            R.plurals.title_items_selected,
                             tracker.selection.size(),
-                            // If this app someday gets multilingual support, this will cause problems
-                            if (tracker.selection.size() == 1) "" else "s"
+                            tracker.selection.size()
                         )
                     }
                 }
@@ -276,7 +275,6 @@ class HomeFragment : Fragment(), HomeworkListAdapter.HomeworkManager, ActionMode
         val ty = TypedValue()
         requireContext().theme.resolveAttribute(R.attr.colorOnSurface, ty, true)
         DrawableCompat.setTint(menu.findItem(R.id.homework_list_selection_delete).icon, ty.data)
-        mode.title = getString(R.string.title_items_selected, 1, "")
         return true
     }
 
