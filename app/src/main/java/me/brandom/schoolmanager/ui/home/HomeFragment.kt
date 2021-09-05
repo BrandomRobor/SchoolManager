@@ -4,9 +4,11 @@ import android.app.AlarmManager
 import android.app.PendingIntent
 import android.content.Intent
 import android.os.Bundle
+import android.util.TypedValue
 import android.view.*
 import androidx.core.app.AlarmManagerCompat
 import androidx.core.content.ContextCompat
+import androidx.core.graphics.drawable.DrawableCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.ViewGroupCompat
 import androidx.core.view.doOnPreDraw
@@ -42,12 +44,14 @@ import javax.inject.Inject
 
 @AndroidEntryPoint
 @ExperimentalCoroutinesApi
-class HomeFragment : Fragment(), HomeworkListAdapter.HomeworkManager {
+class HomeFragment : Fragment(), HomeworkListAdapter.HomeworkManager, ActionMode.Callback {
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
     private val viewModel: HomeworkSharedViewModel by activityViewModels()
     private var homeworkEventsJob: Job? = null
     private var retrievalStateJob: Job? = null
+    private var actionMode: ActionMode? = null
+    private lateinit var tracker: SelectionTracker<Long>
 
     @Inject
     lateinit var notificationTimeHelper: NotificationTimeHelper
@@ -82,13 +86,31 @@ class HomeFragment : Fragment(), HomeworkListAdapter.HomeworkManager {
             fragmentHomeRecyclerView.setHasFixedSize(true)
             fragmentHomeRecyclerView.adapter = adapter
 
-            val tracker = SelectionTracker.Builder(
+            tracker = SelectionTracker.Builder(
                 "homework_selection",
                 fragmentHomeRecyclerView,
                 StableIdKeyProvider(fragmentHomeRecyclerView),
                 HomeworkDetailsLookup(fragmentHomeRecyclerView),
                 StorageStrategy.createLongStorage()
             ).withSelectionPredicate(SelectionPredicates.createSelectAnything()).build()
+
+            tracker.addObserver(object : SelectionTracker.SelectionObserver<Long>() {
+                override fun onSelectionChanged() {
+                    if (actionMode == null) {
+                        actionMode =
+                            if (tracker.hasSelection()) requireActivity().startActionMode(this@HomeFragment) else null
+                    } else {
+                        if (!tracker.hasSelection()) actionMode!!.finish()
+                        actionMode?.title = getString(
+                            R.string.title_items_selected,
+                            tracker.selection.size(),
+                            // If this app someday gets multilingual support, this will cause problems
+                            if (tracker.selection.size() == 1) "" else "s"
+                        )
+                    }
+                }
+            })
+
             adapter.tracker = tracker
 
             retrievalStateJob = viewLifecycleOwner.lifecycleScope.launch {
@@ -243,6 +265,33 @@ class HomeFragment : Fragment(), HomeworkListAdapter.HomeworkManager {
         val alarmManager =
             ContextCompat.getSystemService(requireContext(), AlarmManager::class.java)!!
         alarmManager.cancel(createPendingIntent(id))
+    }
+
+    override fun onCreateActionMode(mode: ActionMode, menu: Menu?): Boolean {
+        mode.menuInflater.inflate(R.menu.homework_list_selection_actions, menu)
+        return true
+    }
+
+    override fun onPrepareActionMode(mode: ActionMode, menu: Menu): Boolean {
+        val ty = TypedValue()
+        requireContext().theme.resolveAttribute(R.attr.colorOnSurface, ty, true)
+        DrawableCompat.setTint(menu.findItem(R.id.homework_list_selection_delete).icon, ty.data)
+        mode.title = getString(R.string.title_items_selected, 1, "")
+        return true
+    }
+
+    override fun onActionItemClicked(mode: ActionMode, item: MenuItem) = when (item.itemId) {
+        R.id.homework_list_selection_delete -> {
+            viewModel.deleteMultipleHomework(tracker.selection)
+            mode.finish()
+            true
+        }
+        else -> false
+    }
+
+    override fun onDestroyActionMode(mode: ActionMode?) {
+        tracker.clearSelection()
+        actionMode = null
     }
 
     override fun onDestroyView() {

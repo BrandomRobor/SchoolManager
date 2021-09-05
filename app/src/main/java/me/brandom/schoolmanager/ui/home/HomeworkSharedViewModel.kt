@@ -6,12 +6,7 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.flatMapLatest
-import kotlinx.coroutines.flow.receiveAsFlow
-import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import me.brandom.schoolmanager.database.daos.HomeworkDao
 import me.brandom.schoolmanager.database.daos.SubjectDao
@@ -133,6 +128,10 @@ class HomeworkSharedViewModel @Inject constructor(
         clearSavedState()
         this.homework = homework
         this.subject = subject
+    }
+
+    fun deleteMultipleHomework(idList: Iterable<Long>) = viewModelScope.launch {
+        homeworkDao.deleteMultipleHomeworkById(idList.toList())
     }
 
     fun setSortOrder(sortOrder: SortOrder) = viewModelScope.launch {

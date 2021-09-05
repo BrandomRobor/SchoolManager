@@ -1,10 +1,6 @@
 package me.brandom.schoolmanager.database.daos
 
-import androidx.room.Dao
-import androidx.room.Delete
-import androidx.room.Insert
-import androidx.room.Query
-import androidx.room.Update
+import androidx.room.*
 import kotlinx.coroutines.flow.Flow
 import me.brandom.schoolmanager.database.entities.Homework
 import me.brandom.schoolmanager.database.entities.HomeworkWithSubject
@@ -49,4 +45,7 @@ interface HomeworkDao {
         SortOrder.BY_NAME -> getAllHomeworkWithSubjectByName()
         SortOrder.BY_DEADLINE -> getAllHomeworkWithSubjectByDeadline()
     }
+
+    @Query("DELETE FROM homework WHERE hwId IN (:idList)")
+    suspend fun deleteMultipleHomeworkById(idList: List<Long>)
 }

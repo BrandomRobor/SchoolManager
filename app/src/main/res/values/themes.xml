@@ -1,6 +1,5 @@
 <resources>
-
     <style name="Theme.SchoolManager" parent="Theme.MaterialComponents.DayNight.NoActionBar">
-
+        <item name="windowActionModeOverlay">true</item>
     </style>
 </resources>
