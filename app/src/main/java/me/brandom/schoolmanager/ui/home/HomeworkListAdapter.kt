@@ -32,10 +32,6 @@ class HomeworkListAdapter(val homeworkManager: HomeworkManager) :
         }
     }
 
-    init {
-        setHasStableIds(true)
-    }
-
     var tracker: SelectionTracker<Long>? = null
 
     inner class HomeworkListViewHolder(private val binding: ItemHomeworkBinding) :
@@ -92,8 +88,6 @@ class HomeworkListAdapter(val homeworkManager: HomeworkManager) :
             )
         }
     }
-
-    override fun getItemId(position: Int) = getItem(position).homework.hwId.toLong()
 
     interface HomeworkManager {
         fun onHomeworkClick(rootView: View, hwWthSubject: HomeworkWithSubject)

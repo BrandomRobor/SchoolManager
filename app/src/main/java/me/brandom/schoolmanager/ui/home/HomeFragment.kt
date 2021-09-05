@@ -21,7 +21,6 @@ import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.selection.SelectionPredicates
 import androidx.recyclerview.selection.SelectionTracker
-import androidx.recyclerview.selection.StableIdKeyProvider
 import androidx.recyclerview.selection.StorageStrategy
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -89,7 +88,7 @@ class HomeFragment : Fragment(), HomeworkListAdapter.HomeworkManager, ActionMode
             tracker = SelectionTracker.Builder(
                 "homework_selection",
                 fragmentHomeRecyclerView,
-                StableIdKeyProvider(fragmentHomeRecyclerView),
+                HomeworkKeyProvider(adapter),
                 HomeworkDetailsLookup(fragmentHomeRecyclerView),
                 StorageStrategy.createLongStorage()
             ).withSelectionPredicate(SelectionPredicates.createSelectAnything()).build()
