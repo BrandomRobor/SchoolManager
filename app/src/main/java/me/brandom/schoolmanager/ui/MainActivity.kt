@@ -36,9 +36,9 @@ class MainActivity : AppCompatActivity() {
 
             val navController =
                 (supportFragmentManager.findFragmentById(activityFragmentView.id) as NavHostFragment).navController
-            acitvityNavView.setupWithNavController(navController)
+            activityNavView.setupWithNavController(navController)
             appBarConfiguration = AppBarConfiguration(
-                acitvityNavView.menu,
+                activityNavView.menu,
                 activityDrawerLayout
             )
             setupActionBarWithNavController(navController, appBarConfiguration)
@@ -50,7 +50,4 @@ class MainActivity : AppCompatActivity() {
         return navController.navigateUp(appBarConfiguration) || super.onSupportNavigateUp()
     }
 
-    fun closeKeyboard() {
-        manager?.hideSoftInputFromWindow(binding.root.windowToken, 0)
-    }
 }

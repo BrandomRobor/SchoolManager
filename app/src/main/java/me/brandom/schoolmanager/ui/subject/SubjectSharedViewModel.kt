@@ -47,12 +47,6 @@ class SubjectSharedViewModel @Inject constructor(
         }
     }
 
-    fun onAddSubjectSubmit(subject: Subject) {
-        viewModelScope.launch {
-            subjectDao.insertSubject(subject)
-        }
-    }
-
     fun onSavedClick() {
         if (subjectName.isBlank()) {
             sendInvalidInputEvent()
