@@ -1,4 +1,4 @@
-package me.brandom.schoolmanager.ui.deletesubject
+package me.brandom.schoolmanager.ui.dialogs
 
 import android.os.Bundle
 import androidx.appcompat.app.AlertDialog

@@ -46,7 +46,7 @@
     </fragment>
     <dialog
         android:id="@+id/deleteSubjectDialogFragment"
-        android:name="me.brandom.schoolmanager.ui.deletesubject.DeleteSubjectDialogFragment"
+        android:name="me.brandom.schoolmanager.ui.dialogs.DeleteSubjectDialogFragment"
         android:label="DeleteSubjectDialogFragment">
         <argument
             android:name="subjectId"
