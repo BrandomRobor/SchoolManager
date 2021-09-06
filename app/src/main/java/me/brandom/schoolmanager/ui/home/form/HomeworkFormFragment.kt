@@ -31,7 +31,7 @@ import me.brandom.schoolmanager.database.entities.Subject
 import me.brandom.schoolmanager.databinding.FragmentHomeworkFormBinding
 import me.brandom.schoolmanager.ui.home.HomeworkSharedViewModel
 import java.text.DateFormat
-import java.util.GregorianCalendar
+import java.util.*
 
 @AndroidEntryPoint
 @ExperimentalCoroutinesApi
@@ -176,7 +176,7 @@ class HomeworkFormFragment : Fragment() {
                                 "deadline" to event.homework.deadline
                             )
                         )
-                        findNavController().popBackStack()
+                        findNavController().popBackStack(R.id.homeFragment, false)
                     }
                 }
             }
