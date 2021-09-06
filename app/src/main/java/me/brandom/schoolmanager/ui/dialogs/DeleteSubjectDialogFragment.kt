@@ -10,7 +10,7 @@ import me.brandom.schoolmanager.R
 
 @AndroidEntryPoint
 class DeleteSubjectDialogFragment : DialogFragment() {
-    private val viewModel: DeleteSubjectViewModel by viewModels()
+    private val viewModel: DialogActionsViewModel by viewModels()
     private val args: DeleteSubjectDialogFragmentArgs by navArgs()
 
     override fun onCreateDialog(savedInstanceState: Bundle?) = AlertDialog.Builder(requireContext())

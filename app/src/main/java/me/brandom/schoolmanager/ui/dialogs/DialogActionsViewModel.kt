@@ -17,7 +17,7 @@ import me.brandom.schoolmanager.utils.ApplicationScope
 import javax.inject.Inject
 
 @HiltViewModel
-class DeleteSubjectViewModel @Inject constructor(
+class DialogActionsViewModel @Inject constructor(
     private val app: Application,
     private val subjectDao: SubjectDao,
     private val homeworkDao: HomeworkDao,
