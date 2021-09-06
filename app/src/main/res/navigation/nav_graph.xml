@@ -28,6 +28,9 @@
         <action
             android:id="@+id/action_subjectFragment_to_subjectFormFragment"
             app:destination="@id/subjectFormFragment" />
+        <action
+            android:id="@+id/action_subjectFragment_to_deleteSubjectDialogFragment"
+            app:destination="@id/deleteSubjectDialogFragment" />
     </fragment>
     <fragment
         android:id="@+id/homeworkFormFragment"
@@ -55,9 +58,6 @@
             android:name="subjectId"
             app:argType="integer" />
     </dialog>
-    <action
-        android:id="@+id/action_global_deleteSubjectDialogFragment"
-        app:destination="@id/deleteSubjectDialogFragment" />
     <fragment
         android:id="@+id/appSettingsFragment"
         android:name="me.brandom.schoolmanager.ui.settings.AppSettingsFragment"

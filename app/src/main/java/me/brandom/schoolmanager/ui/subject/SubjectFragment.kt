@@ -76,7 +76,8 @@ class SubjectFragment : Fragment(), SubjectListAdapter.SubjectManager {
     }
 
     override fun deleteSubject(subject: Subject) {
-        val action = SubjectFragmentDirections.actionGlobalDeleteSubjectDialogFragment(subject.id)
+        val action =
+            SubjectFragmentDirections.actionSubjectFragmentToDeleteSubjectDialogFragment(subject.id)
         findNavController().navigate(action)
     }
 
