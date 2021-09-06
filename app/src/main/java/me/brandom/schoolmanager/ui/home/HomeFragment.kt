@@ -280,7 +280,11 @@ class HomeFragment : Fragment(), HomeworkListAdapter.HomeworkManager, ActionMode
 
     override fun onActionItemClicked(mode: ActionMode, item: MenuItem) = when (item.itemId) {
         R.id.homework_list_selection_delete -> {
-            viewModel.deleteMultipleHomework(tracker.selection)
+            findNavController().navigate(
+                HomeFragmentDirections.actionHomeFragmentToDeleteBulkHomeworkDialogFragment(
+                    tracker.selection.toList().toLongArray()
+                )
+            )
             mode.finish()
             true
         }

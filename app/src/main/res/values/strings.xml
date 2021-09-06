@@ -18,6 +18,13 @@
     <string name="confirm_subject_deletion_positive">Yes</string>
     <string name="confirm_subject_deletion_negative">No</string>
 
+    <string name="bulk_homework_deletion_title">Are you sure?</string>
+    <string name="bulk_homework_deletion_message">
+        This action cannot be undone
+    </string>
+    <string name="bulk_homework_deletion_cancel">Cancel</string>
+    <string name="bulk_homework_deletion_confirm">Confirm</string>
+
     <string name="title_create_homework">Create homework</string>
     <string name="title_edit_homework">Edit homework</string>
     <string name="title_create_subject">Create subject</string>

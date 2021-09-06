@@ -130,10 +130,6 @@ class HomeworkSharedViewModel @Inject constructor(
         this.subject = subject
     }
 
-    fun deleteMultipleHomework(idList: Iterable<Long>) = viewModelScope.launch {
-        homeworkDao.deleteMultipleHomeworkById(idList.toList())
-    }
-
     fun setSortOrder(sortOrder: SortOrder) = viewModelScope.launch {
         sortOrderFlow.emit(sortOrder)
     }

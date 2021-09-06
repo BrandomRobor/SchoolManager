@@ -24,21 +24,31 @@ class DialogActionsViewModel @Inject constructor(
     @ApplicationScope private val applicationScope: CoroutineScope
 ) : AndroidViewModel(app) {
     fun onConfirmDeleteClick(id: Int) = applicationScope.launch {
-        val alarmManager = ContextCompat.getSystemService(app, AlarmManager::class.java)!!
         homeworkDao.getAllHomeworkIdsWithSubjectId(id).forEach {
-            val intent = Intent(app.applicationContext, HomeworkReminderReceiver::class.java)
-            intent.putExtra("id", it)
-
-            alarmManager.cancel(
-                PendingIntent.getBroadcast(
-                    app.applicationContext,
-                    it,
-                    intent,
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_CANCEL_CURRENT else PendingIntent.FLAG_CANCEL_CURRENT
-                )
-            )
+            cancelHomeworkAlarm(it)
         }
-
         subjectDao.deleteSubjectById(id)
+    }
+
+    fun onConfirmDeleteBulk(idList: LongArray) = applicationScope.launch {
+        idList.forEach {
+            cancelHomeworkAlarm(it.toInt())
+        }
+        homeworkDao.deleteMultipleHomeworkById(idList)
+    }
+
+    private fun cancelHomeworkAlarm(id: Int) {
+        val alarmManager = ContextCompat.getSystemService(app, AlarmManager::class.java)!!
+        val intent = Intent(app.applicationContext, HomeworkReminderReceiver::class.java)
+        intent.putExtra("id", id)
+
+        alarmManager.cancel(
+            PendingIntent.getBroadcast(
+                app.applicationContext,
+                id,
+                intent,
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_CANCEL_CURRENT else PendingIntent.FLAG_CANCEL_CURRENT
+            )
+        )
     }
 }

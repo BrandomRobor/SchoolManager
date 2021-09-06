@@ -16,6 +16,9 @@
         <action
             android:id="@+id/action_homeFragment_to_homeworkDetailsFragment"
             app:destination="@id/homeworkDetailsFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_deleteBulkHomeworkDialogFragment"
+            app:destination="@id/deleteBulkHomeworkDialogFragment" />
     </fragment>
     <fragment
         android:id="@+id/subjectFragment"
@@ -71,4 +74,12 @@
             android:id="@+id/action_homeworkDetailsFragment_to_homeworkFormFragment"
             app:destination="@id/homeworkFormFragment" />
     </fragment>
+    <dialog
+        android:id="@+id/deleteBulkHomeworkDialogFragment"
+        android:name="me.brandom.schoolmanager.ui.dialogs.DeleteBulkHomeworkDialogFragment"
+        android:label="DeleteBulkHomeworkDialogFragment">
+        <argument
+            android:name="idArray"
+            app:argType="long[]" />
+    </dialog>
 </navigation>

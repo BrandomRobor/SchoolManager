@@ -47,5 +47,5 @@ interface HomeworkDao {
     }
 
     @Query("DELETE FROM homework WHERE hwId IN (:idList)")
-    suspend fun deleteMultipleHomeworkById(idList: List<Long>)
+    suspend fun deleteMultipleHomeworkById(idList: LongArray)
 }
