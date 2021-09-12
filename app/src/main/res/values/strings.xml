@@ -30,6 +30,8 @@
     <string name="title_create_subject">Create subject</string>
     <string name="title_edit_subject">Edit subject</string>
     <string name="title_details_fragment">Details</string>
+    <string name="title_deadline_time_picker">Select homework deadline time</string>
+    <string name="title_deadline_date_picker">Select homework deadline date</string>
     <plurals name="title_items_selected">
         <item quantity="one">%d item selected</item>
         <item quantity="other">%d items selected</item>

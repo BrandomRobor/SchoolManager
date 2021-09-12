@@ -1,7 +1,5 @@
 package me.brandom.schoolmanager.ui.home.form
 
-import android.app.DatePickerDialog
-import android.app.TimePickerDialog
 import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
@@ -19,8 +17,11 @@ import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.setFragmentResult
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.textfield.MaterialAutoCompleteTextView
+import com.google.android.material.timepicker.MaterialTimePicker
+import com.google.android.material.timepicker.TimeFormat
 import com.google.android.material.transition.MaterialContainerTransform
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -91,19 +92,25 @@ class HomeworkFormFragment : Fragment() {
 
             fragmentAddHomeworkDateInput.editText?.let {
                 it.setOnClickListener { _ ->
-                    DatePickerDialog(
-                        requireContext(),
-                        { _, year, month, dayOfMonth ->
-                            homeworkDeadline.set(year, month, dayOfMonth)
-                            it.setText(
-                                DateFormat.getDateInstance(DateFormat.SHORT)
-                                    .format(homeworkDeadline.time)
-                            )
-                        },
-                        homeworkDeadline.get(GregorianCalendar.YEAR),
-                        homeworkDeadline.get(GregorianCalendar.MONTH),
-                        homeworkDeadline.get(GregorianCalendar.DAY_OF_MONTH)
-                    ).show()
+                    val picker = MaterialDatePicker.Builder.datePicker()
+                        .setSelection(homeworkDeadline.timeInMillis)
+                        .setTitleText(R.string.title_deadline_date_picker)
+                        .build()
+                    picker.addOnPositiveButtonClickListener { selection ->
+                        val selectedDate = GregorianCalendar.getInstance()
+                        selectedDate.timeInMillis =
+                            selection - Calendar.getInstance().timeZone.getOffset(selection)
+                        homeworkDeadline.set(
+                            selectedDate.get(GregorianCalendar.YEAR),
+                            selectedDate.get(GregorianCalendar.MONTH),
+                            selectedDate.get(GregorianCalendar.DAY_OF_MONTH)
+                        )
+                        it.setText(
+                            DateFormat.getDateInstance(DateFormat.SHORT)
+                                .format(homeworkDeadline.timeInMillis)
+                        )
+                    }
+                    picker.show(parentFragmentManager, picker.toString())
                 }
                 it.addTextChangedListener { text ->
                     viewModel.filledDate = text.toString()
@@ -113,20 +120,26 @@ class HomeworkFormFragment : Fragment() {
             fragmentAddHomeworkTimeInput.editText?.let {
                 it.setOnClickListener { _ ->
                     val timeNotSet = viewModel.filledTime.isEmpty()
-                    TimePickerDialog(
-                        requireContext(),
-                        { _, hourOfDay, minute ->
-                            homeworkDeadline.set(GregorianCalendar.HOUR_OF_DAY, hourOfDay)
-                            homeworkDeadline.set(GregorianCalendar.MINUTE, minute)
-                            it.setText(
-                                DateFormat.getTimeInstance(DateFormat.SHORT)
-                                    .format(homeworkDeadline.time)
-                            )
-                        },
-                        if (timeNotSet) 12 else homeworkDeadline.get(GregorianCalendar.HOUR_OF_DAY),
-                        if (timeNotSet) 0 else homeworkDeadline.get(GregorianCalendar.MINUTE),
-                        android.text.format.DateFormat.is24HourFormat(requireContext())
-                    ).show()
+                    val picker = MaterialTimePicker.Builder()
+                        .setTimeFormat(
+                            if (android.text.format.DateFormat.is24HourFormat(
+                                    requireContext()
+                                )
+                            ) TimeFormat.CLOCK_24H else TimeFormat.CLOCK_12H
+                        )
+                        .setHour(if (timeNotSet) 12 else homeworkDeadline.get(GregorianCalendar.HOUR_OF_DAY))
+                        .setMinute(if (timeNotSet) 0 else homeworkDeadline.get(GregorianCalendar.MINUTE))
+                        .setTitleText(R.string.title_deadline_time_picker)
+                        .build()
+                    picker.addOnPositiveButtonClickListener { _ ->
+                        homeworkDeadline.set(GregorianCalendar.HOUR_OF_DAY, picker.hour)
+                        homeworkDeadline.set(GregorianCalendar.MINUTE, picker.minute)
+                        it.setText(
+                            DateFormat.getTimeInstance(DateFormat.SHORT)
+                                .format(homeworkDeadline.time)
+                        )
+                    }
+                    picker.show(parentFragmentManager, picker.toString())
                 }
                 it.addTextChangedListener { text ->
                     viewModel.filledTime = text.toString()
