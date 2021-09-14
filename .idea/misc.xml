@@ -16,7 +16,7 @@
         <entry key="app/src/main/res/layout/fragment_homework_details.xml" value="0.33" />
         <entry key="app/src/main/res/layout/fragment_homework_form.xml" value="0.33" />
         <entry key="app/src/main/res/layout/fragment_subject.xml" value="0.18" />
-        <entry key="app/src/main/res/layout/item_homework.xml" value="0.4351851851851852" />
+        <entry key="app/src/main/res/layout/item_homework.xml" value="0.25" />
         <entry key="app/src/main/res/menu/fragment_home_options.xml" value="0.1984375" />
         <entry key="app/src/main/res/menu/homework_list_selection_actions.xml" value="0.1984375" />
         <entry key="app/src/main/res/menu/homework_menu.xml" value="0.25" />
