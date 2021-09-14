@@ -25,6 +25,11 @@
     <string name="bulk_homework_deletion_cancel">Cancel</string>
     <string name="bulk_homework_deletion_confirm">Confirm</string>
 
+    <string name="bottom_nav_today_button">Today</string>
+    <string name="bottom_nav_tomorrow_button">Tomorrow</string>
+    <string name="bottom_nav_late_button">Late</string>
+    <string name="bottom_nav_all_button">Show all</string>
+
     <string name="title_create_homework">Create homework</string>
     <string name="title_edit_homework">Edit homework</string>
     <string name="title_create_subject">Create subject</string>

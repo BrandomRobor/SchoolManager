@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/homework_nav_today"
+        android:icon="@drawable/ic_calendar_today"
+        android:title="@string/bottom_nav_today_button" />
+
+    <item
+        android:id="@+id/homework_nav_tomorrow"
+        android:icon="@drawable/ic_calendar_today"
+        android:title="@string/bottom_nav_tomorrow_button" />
+
+    <!-- Used to give space for the floating action button. Do not remove -->
+    <item
+        android:enabled="false"
+        android:title="" />
+
+    <item
+        android:id="@+id/homework_nav_late"
+        android:icon="@drawable/ic_calendar_today"
+        android:title="@string/bottom_nav_late_button" />
+
+    <item
+        android:id="@+id/homework_nav_all"
+        android:icon="@drawable/ic_calendar_today"
+        android:title="@string/bottom_nav_all_button" />
+</menu>

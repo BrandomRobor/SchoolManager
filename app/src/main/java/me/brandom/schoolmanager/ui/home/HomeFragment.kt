@@ -77,6 +77,8 @@ class HomeFragment : Fragment(), HomeworkListAdapter.HomeworkManager, ActionMode
             ViewGroupCompat.setTransitionGroup(fragmentHomeRecyclerView, true)
             ViewCompat.setTransitionName(fragmentHomeAddFab, "fab_to_form_transition")
 
+            fragmentHomeBottomNav.background = null
+
             fragmentHomeRecyclerView.addItemDecoration(
                 DividerItemDecoration(
                     fragmentHomeRecyclerView.context,
