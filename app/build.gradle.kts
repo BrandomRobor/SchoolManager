@@ -17,6 +17,7 @@ android {
         targetSdk = 30
         versionCode = 1
         versionName = "0.1-alpha"
+        multiDexEnabled = true
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
@@ -39,6 +40,7 @@ android {
         }
     }
     compileOptions {
+        isCoreLibraryDesugaringEnabled = true
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
     }
@@ -98,6 +100,9 @@ dependencies {
 
     // RecyclerView selection
     implementation("androidx.recyclerview:recyclerview-selection:1.1.0")
+
+    // Core desugaring library
+    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:1.1.5")
 }
 
 kapt {

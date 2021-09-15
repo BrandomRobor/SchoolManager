@@ -60,9 +60,9 @@ class HomeworkReminderReceiver : BroadcastReceiver() {
             )
 
             val nextReminderTime =
-                notificationTimeHelper.getNextNotificationTime(hwWthSubject.homework.deadline)
+                notificationTimeHelper.getNextNotificationTime(hwWthSubject.homework.deadline.toEpochSecond())
 
-            if (hwWthSubject.homework.deadline != nextReminderTime) {
+            if (hwWthSubject.homework.deadline.toEpochSecond() != nextReminderTime) {
                 val nextReminderIntent = Intent(context, HomeworkReminderReceiver::class.java)
                 nextReminderIntent.putExtra("id", homeworkId)
 

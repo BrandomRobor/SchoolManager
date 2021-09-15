@@ -37,7 +37,7 @@ interface HomeworkDao {
     @Query(
         "SELECT homework.*, subject.* FROM homework " +
                 "INNER JOIN subject ON homework.subjectId = subject.id " +
-                "ORDER BY homework.deadline"
+                "ORDER BY datetime(homework.deadline)"
     )
     fun getAllHomeworkWithSubjectByDeadline(): Flow<List<HomeworkWithSubject>>
 
