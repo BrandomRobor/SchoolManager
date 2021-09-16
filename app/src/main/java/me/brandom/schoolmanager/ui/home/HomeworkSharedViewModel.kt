@@ -13,10 +13,10 @@ import me.brandom.schoolmanager.database.daos.SubjectDao
 import me.brandom.schoolmanager.database.entities.Homework
 import me.brandom.schoolmanager.database.entities.Subject
 import me.brandom.schoolmanager.ui.MainActivity
+import me.brandom.schoolmanager.utils.Constants
 import me.brandom.schoolmanager.utils.SortOrder
-import java.time.Instant
 import java.time.OffsetDateTime
-import java.time.ZoneId
+import java.time.ZonedDateTime
 import javax.inject.Inject
 
 @ExperimentalCoroutinesApi
@@ -41,8 +41,9 @@ class HomeworkSharedViewModel @Inject constructor(
     var filledTime = ""
         get() = state.get<String>("filledTime") ?: homework?.formattedTime ?: field
         set(value) = state.set("filledTime", value)
-    var homeworkDeadline = System.currentTimeMillis()
-        get() = state.get<Long>("homeworkDeadline") ?: homework?.deadline?.toEpochSecond() ?: field
+    var homeworkDeadline: String = ZonedDateTime.now().format(Constants.INTERNAL_DATE_FORMATTER)
+        get() = state.get<String>("homeworkDeadline")
+            ?: homework?.deadline?.format(Constants.INTERNAL_DATE_FORMATTER) ?: field
         set(value) = state.set("homeworkDeadline", value)
     var homeworkSubjectId = 0
         get() = state.get<Int>("homeworkSubjectId") ?: homework?.subjectId ?: field
@@ -109,9 +110,9 @@ class HomeworkSharedViewModel @Inject constructor(
         homework?.also {
             val updatedHomework = it.copy(
                 hwName = homeworkName,
-                deadline = OffsetDateTime.ofInstant(
-                    Instant.ofEpochSecond(homeworkDeadline),
-                    ZoneId.systemDefault()
+                deadline = OffsetDateTime.parse(
+                    homeworkDeadline,
+                    Constants.INTERNAL_DATE_FORMATTER
                 ),
                 subjectId = homeworkSubjectId,
                 description = clearDescription
@@ -122,10 +123,7 @@ class HomeworkSharedViewModel @Inject constructor(
             val newHomework =
                 Homework(
                     homeworkName,
-                    OffsetDateTime.ofInstant(
-                        Instant.ofEpochSecond(homeworkDeadline),
-                        ZoneId.systemDefault()
-                    ),
+                    OffsetDateTime.parse(homeworkDeadline, Constants.INTERNAL_DATE_FORMATTER),
                     homeworkSubjectId,
                     clearDescription
                 )
