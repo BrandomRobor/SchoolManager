@@ -45,6 +45,7 @@
     <string name="action_undo_delete">Undo</string>
     <string name="action_add_subject">Add subject</string>
     <string name="action_delete_selected">Delete selected</string>
+    <string name="action_mark_complete">Mark as complete</string>
 
     <string name="options_sort_title">Sort by</string>
     <string name="options_sort_name_option_title">By name</string>

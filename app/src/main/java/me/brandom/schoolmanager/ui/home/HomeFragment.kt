@@ -1,14 +1,8 @@
 package me.brandom.schoolmanager.ui.home
 
-import android.app.AlarmManager
-import android.app.PendingIntent
-import android.content.Intent
-import android.os.Build
 import android.os.Bundle
 import android.util.TypedValue
 import android.view.*
-import androidx.core.app.AlarmManagerCompat
-import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.DrawableCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.ViewGroupCompat
@@ -36,9 +30,8 @@ import me.brandom.schoolmanager.R
 import me.brandom.schoolmanager.database.entities.Homework
 import me.brandom.schoolmanager.database.entities.HomeworkWithSubject
 import me.brandom.schoolmanager.databinding.FragmentHomeBinding
-import me.brandom.schoolmanager.receivers.HomeworkReminderReceiver
 import me.brandom.schoolmanager.ui.MainActivity
-import me.brandom.schoolmanager.utils.NotificationTimeHelper
+import me.brandom.schoolmanager.utils.ReminderHelper
 import me.brandom.schoolmanager.utils.SortOrder
 import javax.inject.Inject
 
@@ -54,7 +47,7 @@ class HomeFragment : Fragment(), HomeworkListAdapter.HomeworkManager, ActionMode
     private lateinit var tracker: SelectionTracker<Long>
 
     @Inject
-    lateinit var notificationTimeHelper: NotificationTimeHelper
+    lateinit var reminderHelper: ReminderHelper
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -215,14 +208,14 @@ class HomeFragment : Fragment(), HomeworkListAdapter.HomeworkManager, ActionMode
         viewModel.updateHomework(homework.copy(isComplete = checkBoxState))
 
         if (checkBoxState) {
-            cancelAlarm(homework.hwId)
+            reminderHelper.cancelReminderAlarm(homework.hwId)
         } else {
             createAlarm(homework.hwId, homework.deadline)
         }
     }
 
     override fun deleteHomework(homework: Homework) {
-        cancelAlarm(homework.hwId)
+        reminderHelper.cancelReminderAlarm(homework.hwId)
 
         viewModel.deleteHomework(homework)
         Snackbar.make(requireView(), R.string.success_homework_deleted, Snackbar.LENGTH_LONG)
@@ -239,33 +232,10 @@ class HomeFragment : Fragment(), HomeworkListAdapter.HomeworkManager, ActionMode
         findNavController().navigate(action)
     }
 
-    private fun createPendingIntent(id: Int): PendingIntent {
-        val intent = Intent(requireContext(), HomeworkReminderReceiver::class.java)
-        intent.putExtra("id", id)
-
-        return PendingIntent.getBroadcast(
-            requireContext(),
-            id,
-            intent,
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_CANCEL_CURRENT else PendingIntent.FLAG_CANCEL_CURRENT
-        )
-    }
-
     private fun createAlarm(id: Int, deadline: Long) {
         if (deadline > System.currentTimeMillis()) {
-            AlarmManagerCompat.setExactAndAllowWhileIdle(
-                ContextCompat.getSystemService(requireContext(), AlarmManager::class.java)!!,
-                AlarmManager.RTC_WAKEUP,
-                notificationTimeHelper.getInitialNotificationTime(deadline),
-                createPendingIntent(id)
-            )
+            reminderHelper.createReminderAlarm(id, deadline)
         }
-    }
-
-    private fun cancelAlarm(id: Int) {
-        val alarmManager =
-            ContextCompat.getSystemService(requireContext(), AlarmManager::class.java)!!
-        alarmManager.cancel(createPendingIntent(id))
     }
 
     override fun onCreateActionMode(mode: ActionMode, menu: Menu?): Boolean {
