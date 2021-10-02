@@ -217,7 +217,7 @@ class HomeFragment : Fragment(), HomeworkListAdapter.HomeworkManager, ActionMode
         if (checkBoxState) {
             cancelAlarm(homework.hwId)
         } else {
-            createAlarm(homework.hwId, homework.deadline.toEpochSecond())
+            createAlarm(homework.hwId, homework.deadline)
         }
     }
 

@@ -32,12 +32,12 @@ import me.brandom.schoolmanager.R
 import me.brandom.schoolmanager.database.entities.Subject
 import me.brandom.schoolmanager.databinding.FragmentHomeworkFormBinding
 import me.brandom.schoolmanager.ui.home.HomeworkSharedViewModel
-import me.brandom.schoolmanager.utils.Constants
 import java.time.Instant
 import java.time.LocalTime
 import java.time.ZoneId
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
+import java.time.format.FormatStyle
 
 @AndroidEntryPoint
 @ExperimentalCoroutinesApi
@@ -74,7 +74,10 @@ class HomeworkFormFragment : Fragment() {
         ViewCompat.setTransitionName(binding.root, "fab_to_form_transition")
 
         val homeworkDeadline =
-            ZonedDateTime.parse(viewModel.homeworkDeadline, Constants.INTERNAL_DATE_FORMATTER)
+            ZonedDateTime.ofInstant(
+                Instant.ofEpochMilli(viewModel.homeworkDeadline),
+                ZoneId.systemDefault()
+            )
         var selectedDate = homeworkDeadline.toLocalDate()
         var selectedTime = homeworkDeadline.toLocalTime()
 
@@ -99,7 +102,7 @@ class HomeworkFormFragment : Fragment() {
                 it.setOnClickListener { _ ->
                     val picker = MaterialDatePicker.Builder.datePicker()
                         .setSelection(
-                            selectedDate.atStartOfDay(ZoneId.systemDefault()).toInstant()
+                            selectedDate.atStartOfDay(ZoneId.of("UTC")).toInstant()
                                 .toEpochMilli()
                         )
                         .setTitleText(R.string.title_deadline_date_picker)
@@ -107,7 +110,7 @@ class HomeworkFormFragment : Fragment() {
                     picker.addOnPositiveButtonClickListener { selection ->
                         selectedDate =
                             Instant.ofEpochMilli(selection).atZone(ZoneId.of("UTC")).toLocalDate()
-                        it.setText(selectedDate.format(DateTimeFormatter.BASIC_ISO_DATE))
+                        it.setText(selectedDate.format(DateTimeFormatter.ofLocalizedDate(FormatStyle.SHORT)))
                     }
                     picker.show(parentFragmentManager, picker.toString())
                 }
@@ -129,7 +132,7 @@ class HomeworkFormFragment : Fragment() {
                         .build()
                     picker.addOnPositiveButtonClickListener { _ ->
                         selectedTime = LocalTime.of(picker.hour, picker.minute)
-                        it.setText(selectedTime.format(DateTimeFormatter.ISO_LOCAL_TIME))
+                        it.setText(selectedTime.format(DateTimeFormatter.ofLocalizedTime(FormatStyle.SHORT)))
                     }
                     picker.show(parentFragmentManager, picker.toString())
                 }
@@ -161,8 +164,8 @@ class HomeworkFormFragment : Fragment() {
 
             fragmentAddHomeworkDoneFab.setOnClickListener {
                 viewModel.homeworkDeadline =
-                    ZonedDateTime.of(selectedDate, selectedTime, ZoneId.systemDefault())
-                        .format(Constants.INTERNAL_DATE_FORMATTER)
+                    ZonedDateTime.of(selectedDate, selectedTime, ZoneId.systemDefault()).toInstant()
+                        .toEpochMilli()
                 viewModel.onSavedClick()
             }
         }
