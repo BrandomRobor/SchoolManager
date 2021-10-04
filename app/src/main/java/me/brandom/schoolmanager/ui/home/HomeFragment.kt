@@ -234,7 +234,7 @@ class HomeFragment : Fragment(), HomeworkListAdapter.HomeworkManager, ActionMode
 
     private fun createAlarm(id: Int, deadline: Long) {
         if (deadline > System.currentTimeMillis()) {
-            reminderHelper.createReminderAlarm(id, deadline)
+            reminderHelper.createReminderAlarm(id, reminderHelper.getInitialReminderTime(deadline))
         }
     }
 
