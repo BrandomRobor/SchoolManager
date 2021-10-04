@@ -19,6 +19,7 @@ import androidx.recyclerview.selection.SelectionTracker
 import androidx.recyclerview.selection.StorageStrategy
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.android.material.navigation.NavigationBarView
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.transition.MaterialElevationScale
 import dagger.hilt.android.AndroidEntryPoint
@@ -31,6 +32,7 @@ import me.brandom.schoolmanager.database.entities.Homework
 import me.brandom.schoolmanager.database.entities.HomeworkWithSubject
 import me.brandom.schoolmanager.databinding.FragmentHomeBinding
 import me.brandom.schoolmanager.ui.MainActivity
+import me.brandom.schoolmanager.utils.HomeworkOptions
 import me.brandom.schoolmanager.utils.ReminderHelper
 import me.brandom.schoolmanager.utils.SortOrder
 import javax.inject.Inject
@@ -117,6 +119,28 @@ class HomeFragment : Fragment(), HomeworkListAdapter.HomeworkManager, ActionMode
 
             fragmentHomeAddFab.setOnClickListener {
                 viewModel.onAddHomeworkClick()
+            }
+
+            fragmentHomeBottomNav.setOnItemSelectedListener {
+                when (it.itemId) {
+                    R.id.homework_nav_today -> {
+                        viewModel.hwOptionSelected = HomeworkOptions.TODAY
+                        true
+                    }
+                    R.id.homework_nav_tomorrow -> {
+                        viewModel.hwOptionSelected = HomeworkOptions.TOMORROW
+                        true
+                    }
+                    R.id.homework_nav_late -> {
+                        viewModel.hwOptionSelected = HomeworkOptions.LATE
+                        true
+                    }
+                    R.id.homework_nav_all -> {
+                        viewModel.hwOptionSelected = HomeworkOptions.ALL
+                        true
+                    }
+                    else -> false
+                }
             }
         }
 

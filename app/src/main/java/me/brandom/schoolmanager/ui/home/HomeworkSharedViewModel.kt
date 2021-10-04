@@ -13,6 +13,7 @@ import me.brandom.schoolmanager.database.daos.SubjectDao
 import me.brandom.schoolmanager.database.entities.Homework
 import me.brandom.schoolmanager.database.entities.Subject
 import me.brandom.schoolmanager.ui.MainActivity
+import me.brandom.schoolmanager.utils.HomeworkOptions
 import me.brandom.schoolmanager.utils.SortOrder
 import javax.inject.Inject
 
@@ -25,6 +26,7 @@ class HomeworkSharedViewModel @Inject constructor(
 ) : ViewModel() {
     var homework: Homework? = null
     lateinit var subject: Subject
+    var hwOptionSelected = HomeworkOptions.TODAY
 
     var homeworkName = ""
         get() = state.get<String>("homeworkName") ?: homework?.hwName ?: field
@@ -48,8 +50,13 @@ class HomeworkSharedViewModel @Inject constructor(
     private val sortOrderFlow = MutableStateFlow(SortOrder.BY_NAME)
     val currentSortOrder = sortOrderFlow.value
 
-    private val homeworkListCustomized = sortOrderFlow.flatMapLatest {
-        homeworkDao.getAllHomeworkWithSubject(it)
+    private val hwOptionFlow = MutableStateFlow(HomeworkOptions.TODAY)
+    val currentHwOption = hwOptionFlow.value
+
+    private val homeworkListCustomized = sortOrderFlow.combine(hwOptionFlow) { sortOrder, option ->
+        Pair(sortOrder, option)
+    }.flatMapLatest {
+        homeworkDao.getAllHomeworkWithSubject(it.first, it.second)
     }
     val homeworkList = homeworkListCustomized.stateIn(
         viewModelScope,
