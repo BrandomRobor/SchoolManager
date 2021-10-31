@@ -59,7 +59,7 @@ class HomeworkListAdapter(val homeworkManager: HomeworkManager) :
                 itemHomeworkDeadline.text = homework.formattedDateTime
                 itemHomeworkSubject.text = subject.name
                 itemHomeworkCheckBox.isChecked = homework.isComplete
-                itemHomeworkName.paint.isStrikeThruText = isSelected
+                root.isSelected = isSelected
             }
         }
 
