@@ -10,11 +10,6 @@
         android:icon="@drawable/ic_calendar_arrow_right"
         android:title="@string/bottom_nav_tomorrow_button" />
 
-    <!-- Used to give space for the floating action button. Do not remove -->
-    <item
-        android:enabled="false"
-        android:title="" />
-
     <item
         android:id="@+id/homework_nav_late"
         android:icon="@drawable/ic_calendar_alert"
