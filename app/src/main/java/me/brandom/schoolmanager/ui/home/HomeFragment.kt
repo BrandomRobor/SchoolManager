@@ -11,7 +11,9 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.setFragmentResultListener
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.selection.SelectionPredicates
@@ -23,7 +25,6 @@ import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.transition.MaterialElevationScale
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import me.brandom.schoolmanager.R
@@ -42,8 +43,6 @@ class HomeFragment : Fragment(), HomeworkListAdapter.HomeworkManager, ActionMode
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
     private val viewModel: HomeworkSharedViewModel by activityViewModels()
-    private var homeworkEventsJob: Job? = null
-    private var retrievalStateJob: Job? = null
     private var actionMode: ActionMode? = null
     private lateinit var tracker: SelectionTracker<Long>
 
@@ -108,11 +107,13 @@ class HomeFragment : Fragment(), HomeworkListAdapter.HomeworkManager, ActionMode
 
             adapter.tracker = tracker
 
-            retrievalStateJob = viewLifecycleOwner.lifecycleScope.launch {
-                viewModel.homeworkList.collect {
-                    fragmentHomeNoItemsMessage.isVisible = it.isEmpty()
-                    fragmentHomeRecyclerView.isVisible = it.isNotEmpty()
-                    adapter.submitList(it)
+            viewLifecycleOwner.lifecycleScope.launch {
+                repeatOnLifecycle(Lifecycle.State.STARTED) {
+                    viewModel.homeworkList.collect {
+                        fragmentHomeNoItemsMessage.isVisible = it.isEmpty()
+                        fragmentHomeRecyclerView.isVisible = it.isNotEmpty()
+                        adapter.submitList(it)
+                    }
                 }
             }
 
@@ -143,28 +144,31 @@ class HomeFragment : Fragment(), HomeworkListAdapter.HomeworkManager, ActionMode
             }
         }
 
-        homeworkEventsJob = viewLifecycleOwner.lifecycleScope.launchWhenStarted {
-            viewModel.homeworkEvents.collect {
-                when (it) {
-                    HomeworkSharedViewModel.HomeworkFormChecks.OK -> {
-                        viewModel.resetStates()
-                        val extras =
-                            FragmentNavigatorExtras(binding.fragmentHomeAddFab to "fab_to_form_transition")
-                        val action =
-                            HomeFragmentDirections.actionHomeFragmentToHomeworkFormFragment(
-                                getString(R.string.title_create_homework)
-                            )
-                        findNavController().navigate(action, extras)
-                    }
-                    HomeworkSharedViewModel.HomeworkFormChecks.NO_SUBJECTS ->
-                        Snackbar.make(view, R.string.error_no_subjects, Snackbar.LENGTH_LONG)
-                            .setAction(R.string.action_add_subject) {
-                                val action = HomeFragmentDirections.actionGlobalSubjectFormFragment(
-                                    getString(R.string.title_create_subject)
+        viewLifecycleOwner.lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.RESUMED) {
+                viewModel.homeworkEvents.collect {
+                    when (it) {
+                        HomeworkSharedViewModel.HomeworkFormChecks.OK -> {
+                            viewModel.resetStates()
+                            val extras =
+                                FragmentNavigatorExtras(binding.fragmentHomeAddFab to "fab_to_form_transition")
+                            val action =
+                                HomeFragmentDirections.actionHomeFragmentToHomeworkFormFragment(
+                                    getString(R.string.title_create_homework)
                                 )
-                                findNavController().navigate(action)
-                            }
-                            .show()
+                            findNavController().navigate(action, extras)
+                        }
+                        HomeworkSharedViewModel.HomeworkFormChecks.NO_SUBJECTS ->
+                            Snackbar.make(view, R.string.error_no_subjects, Snackbar.LENGTH_LONG)
+                                .setAction(R.string.action_add_subject) {
+                                    val action =
+                                        HomeFragmentDirections.actionGlobalSubjectFormFragment(
+                                            getString(R.string.title_create_subject)
+                                        )
+                                    findNavController().navigate(action)
+                                }
+                                .show()
+                    }
                 }
             }
         }
@@ -293,8 +297,6 @@ class HomeFragment : Fragment(), HomeworkListAdapter.HomeworkManager, ActionMode
 
     override fun onDestroyView() {
         super.onDestroyView()
-        retrievalStateJob?.cancel()
-        homeworkEventsJob?.cancel()
         _binding = null
     }
 

@@ -60,7 +60,7 @@ class HomeworkSharedViewModel @Inject constructor(
     }
     val homeworkList = homeworkListCustomized.stateIn(
         viewModelScope,
-        SharingStarted.WhileSubscribed(),
+        SharingStarted.WhileSubscribed(5000),
         emptyList()
     )
 
@@ -71,7 +71,8 @@ class HomeworkSharedViewModel @Inject constructor(
     val homeworkFormEvents = homeworkFormEventsChannel.receiveAsFlow()
 
     val subjectList =
-        subjectDao.getAllSubjects().stateIn(viewModelScope, SharingStarted.Eagerly, emptyList())
+        subjectDao.getAllSubjects()
+            .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
 
     fun onUndoHomeworkClick(homework: Homework) = viewModelScope.launch {
         homeworkDao.insertHomework(homework)
